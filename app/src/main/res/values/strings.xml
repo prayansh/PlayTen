@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">#Ultimate</string>
+
+    <string name="settings">Settings</string>
+    <string name="new_game">New Game</string>
+    <string name="player_turn">X is Playing</string>
+    <string name="board_data">board_data</string>
+    <string name="any_changes">any_changes</string>
+</resources>
