@@ -17,6 +17,9 @@
 package com.game.prayansh.ultimatetictactoe.models;
 
 
+import android.os.Bundle;
+
+import com.game.prayansh.ultimatetictactoe.GameActivity;
 import com.game.prayansh.ultimatetictactoe.exceptions.GameOverException;
 import com.game.prayansh.ultimatetictactoe.exceptions.InvalidMoveException;
 
@@ -34,6 +37,12 @@ public class Game {
         }
         contextBoard = -1;
         player = CellVal.X;
+    }
+
+    public Game(Board[] boards, CellVal player) {
+        this.boards = boards;
+        this.player = player;
+        updateEquivalentBoard();
     }
 
     public Board getInContextBoard() {
@@ -68,14 +77,14 @@ public class Game {
             throw new InvalidMoveException("Invalid Move for Player " + player.name() + ":" + position);
         }
         updateEquivalentBoard();
-        togglePlayer();
-        if (checkWinner())
-            throw new GameOverException("Player " + player.name() + " has won", player);
         contextBoard = position;
         if (getInContextBoard().solved()) {
             int index = contextBoard;
             contextBoard = -1;
         }
+        if (checkWinner())
+            throw new GameOverException("Player " + player.name() + " has won", player);
+        togglePlayer();
         return contextBoard;
     }
 
@@ -109,5 +118,12 @@ public class Game {
 
     public Board getEquivalent() {
         return equivalent;
+    }
+
+    public Bundle toBundle() {
+        Bundle thisInstance = new Bundle();
+        thisInstance.putSerializable(GameActivity.STATE_PLAYER, player);
+        thisInstance.putParcelableArray(GameActivity.STATE_BOARDS, boards);
+        return thisInstance;
     }
 }

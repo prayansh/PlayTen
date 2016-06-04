@@ -30,6 +30,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.game.prayansh.ultimatetictactoe.models.Board;
+import com.game.prayansh.ultimatetictactoe.models.CellVal;
+import com.game.prayansh.ultimatetictactoe.models.Game;
 import com.game.prayansh.ultimatetictactoe.ui.GameUI;
 
 import java.util.List;
@@ -65,6 +68,10 @@ public class GameActivity extends AppCompatActivity {
     List<View> highlights;
 
     private static final String TAG = "GameActivity#U";
+    private static final String STATE_GAME = "game";
+    public static final String STATE_PLAYER = "player";
+    public static final String STATE_BOARDS = "boards";
+    public static final String STATE_BITMAPS = "bitmaps";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +97,7 @@ public class GameActivity extends AppCompatActivity {
         Bitmap[] bitmaps = new Bitmap[9];
         for (int i = 0; i < bitmaps.length; i++) {
             bitmaps[i] = BitmapFactory.decodeResource(getResources(),
-                    R.drawable.placeholder);// TODO change bitmap
+                    R.drawable.placeholder_holder);// TODO change bitmap
             boards.get(i).setImageBitmap(bitmaps[i]);
         }
         mTurnTv.setText(Utils.getPlayerText());
@@ -133,6 +140,11 @@ public class GameActivity extends AppCompatActivity {
         for (Bitmap bm : GameUI.getInstance().getGameBoards()) {
             boards.get(i).setImageBitmap(bm);
             i++;
+        }
+        for (i = 0; i < GameUI.getInstance().getGame().getBoards().length; i++) {
+            if (GameUI.getInstance().getGame().getBoards()[i].solved())
+                boards.get(i).setClickable(false);
+
         }
         mTurnTv.setText(Utils.getPlayerText());
         highlight();
@@ -205,5 +217,43 @@ public class GameActivity extends AppCompatActivity {
     private void delayedHide(int delayMillis) {
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle savedInstanceState) {
+        // Save the user's current game state
+        savedInstanceState.putBundle(STATE_GAME, GameUI.getInstance().getGame().toBundle());
+        savedInstanceState.putSerializable(STATE_BITMAPS, GameUI.getInstance().getGameBoards());
+
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        restoreGame(savedInstanceState);
+    }
+
+    private void restoreGame(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            Bitmap[] gameBoards = (Bitmap[]) savedInstanceState.getSerializable(STATE_BITMAPS);
+            Bundle bundle = savedInstanceState.getBundle(STATE_GAME);
+            if (bundle == null)
+                return;
+
+            CellVal player = (CellVal) bundle.getSerializable(STATE_PLAYER);
+            Board[] boards = (Board[]) bundle.getParcelableArray(STATE_BOARDS);
+
+            GameUI.recreate(new Game(boards, player), gameBoards);
+
+            mTurnTv.setText(Utils.getPlayerText());
+            GameUI.getInstance().setGameBoards(gameBoards);
+            highlight();
+            Log.d(TAG, "Game Resumed");
+        } else {
+            Log.e(TAG, "Saved Instance State Empty");
+        }
+
     }
 }

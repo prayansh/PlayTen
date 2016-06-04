@@ -16,6 +16,7 @@
 
 package com.game.prayansh.ultimatetictactoe;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.os.Environment;
@@ -32,7 +33,6 @@ import java.util.Random;
  * Created by Prayansh on 16-05-13.
  */
 public class Utils {
-    private static int playerText;
 
     public static Bitmap screenShot(View view) {
         Bitmap bitmap = Bitmap.createBitmap(view.getWidth(),
@@ -68,4 +68,6 @@ public class Utils {
     public static String getPlayerText() {
         return GameUI.getInstance().getGame().getPlayer().name() + " is playing!";
     }
+
+
 }

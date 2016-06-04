@@ -16,10 +16,12 @@
 
 package com.game.prayansh.ultimatetictactoe.models;
 
+import java.io.Serializable;
+
 /**
  * Created by Prayansh on 2016-05-11.
  */
-public class Cell {
+public class Cell implements Serializable {
     private CellVal val;
 
     public Cell() {

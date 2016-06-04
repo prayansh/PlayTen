@@ -17,6 +17,7 @@
 package com.game.prayansh.ultimatetictactoe.ui;
 
 import android.graphics.Bitmap;
+import android.os.Bundle;
 
 import com.game.prayansh.ultimatetictactoe.models.Game;
 
@@ -24,6 +25,8 @@ import com.game.prayansh.ultimatetictactoe.models.Game;
  * Created by Prayansh on 16-05-12.
  */
 public class GameUI {
+    private static final String BITMAPS = "bitmaps";
+    private static final String GAME = "game";
     private Game mGame;
     private Bitmap[] gameBoards; // stores bitmaps of each small board
     private static GameUI gameUI;
@@ -34,6 +37,15 @@ public class GameUI {
      */
     private GameUI() {
         newGame();
+    }
+
+    private GameUI(Game game, Bitmap[] bitmaps) {
+        mGame = game;
+        gameBoards = bitmaps;
+    }
+
+    public static void recreate(Game game, Bitmap[] bitmaps) {
+        gameUI = new GameUI(game, bitmaps);
     }
 
     /**

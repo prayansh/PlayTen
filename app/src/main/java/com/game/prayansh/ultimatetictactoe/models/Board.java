@@ -16,6 +16,9 @@
 
 package com.game.prayansh.ultimatetictactoe.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Iterator;
 
 /**
@@ -23,7 +26,7 @@ import java.util.Iterator;
  * INVARIANT: Size is always 9
  */
 
-public class Board implements Iterable<Cell> {
+public class Board implements Iterable<Cell>, Parcelable {
     private Cell[] cells;
     private int score[];
 
@@ -46,6 +49,10 @@ public class Board implements Iterable<Cell> {
         for (int i = 0; i < cells.length; i++) {
             setCellAt(i, cells[i]);
         }
+    }
+
+    public Board(Parcel in) {
+        readFromParcel(in);
     }
 
     /**
@@ -141,6 +148,34 @@ public class Board implements Iterable<Cell> {
     public Iterator<Cell> iterator() {
         return new CellIterator();
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeSerializable(cells);
+        dest.writeIntArray(score);
+    }
+
+    private void readFromParcel(Parcel in) {
+        cells = (Cell[]) in.readSerializable();
+        in.readIntArray(score);
+    }
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+
+        public Board createFromParcel(Parcel in) {
+            return new Board(in);
+        }
+
+        public Board[] newArray(int size) {
+            return new Board[size];
+        }
+
+    };
 
     private class CellIterator implements Iterator<Cell> {
         int current;
