@@ -72,15 +72,20 @@ public class GameActivity extends AppCompatActivity {
     public static final String STATE_PLAYER = "player";
     public static final String STATE_BOARDS = "boards";
     public static final String STATE_BITMAPS = "bitmaps";
+    private boolean gameStart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_activity);
         ButterKnife.bind(this);
-        setupGame();
-        highlight();
+        setupStart();
         Toast.makeText(this, "Game Ready", Toast.LENGTH_LONG).show();
+    }
+
+    private void setupStart() {
+        mTurnTv.setText(getString(R.string.start));
+        gameStart = false;
     }
 
     private void highlight() {
@@ -94,6 +99,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void setupGame() {
+        gameStart = true;
         Bitmap[] bitmaps = new Bitmap[9];
         for (int i = 0; i < bitmaps.length; i++) {
             bitmaps[i] = BitmapFactory.decodeResource(getResources(),
@@ -110,11 +116,13 @@ public class GameActivity extends AppCompatActivity {
             R.id.c10, R.id.c11, R.id.c12,
             R.id.c20, R.id.c21, R.id.c22})
     public void maximiseBoard(ImageView iv) {
-        int index = Integer.parseInt(iv.getContentDescription().toString());
-        Log.d(TAG, "Maximising " + (index + 1) + " board");
-        Intent intent = new Intent(this, BoardFragment.class);
-        intent.putExtra(getString(R.string.board_data), index);
-        startActivityForResult(intent, MyApplication.BOARD_REQUEST_CODE);
+        if (gameStart) {
+            int index = Integer.parseInt(iv.getContentDescription().toString());
+            Log.d(TAG, "Maximising " + (index + 1) + " board");
+            Intent intent = new Intent(this, BoardFragment.class);
+            intent.putExtra(getString(R.string.board_data), index);
+            startActivityForResult(intent, MyApplication.BOARD_REQUEST_CODE);
+        }
     }
 
     @OnClick(R.id.restart)

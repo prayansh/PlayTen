@@ -6,4 +6,5 @@
     <string name="player_turn">X is Playing</string>
     <string name="board_data">board_data</string>
     <string name="any_changes">any_changes</string>
+    <string name="start">Click Play to start</string>
 </resources>
