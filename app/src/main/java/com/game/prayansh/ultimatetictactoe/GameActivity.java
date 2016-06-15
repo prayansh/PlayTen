@@ -16,12 +16,14 @@
 
 package com.game.prayansh.ultimatetictactoe;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -125,11 +127,13 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
-    @OnClick(R.id.restart)
-    public void restart() {
+    public void newGame() {
         GameUI.getInstance().newGame();
         setupGame();
         highlight();
+        for (View v : boards) {
+            v.setClickable(true);
+        }
     }
 
     @Override
@@ -263,5 +267,30 @@ public class GameActivity extends AppCompatActivity {
             Log.e(TAG, "Saved Instance State Empty");
         }
 
+    }
+
+    @OnClick(R.id.restart)
+    public void newGameDialog() {
+        if (gameStart) {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+            alertDialogBuilder.setMessage(getString(R.string.reset));
+
+            alertDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface arg0, int arg1) {
+                    newGame();
+                }
+            });
+
+            alertDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                }
+            });
+
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
+        } else
+            newGame();
     }
 }

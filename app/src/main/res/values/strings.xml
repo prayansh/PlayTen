@@ -7,4 +7,5 @@
     <string name="board_data">board_data</string>
     <string name="any_changes">any_changes</string>
     <string name="start">Click Play to start</string>
+    <string name="reset">Are you sure you want to start a new game?</string>
 </resources>
