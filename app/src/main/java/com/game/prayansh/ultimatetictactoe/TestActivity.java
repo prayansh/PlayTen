@@ -50,6 +50,10 @@ public class TestActivity extends AppCompatActivity {
             case 1:
                 for (int i = 0; i < mBoardView.getMaxChildren(); i++) {
                     BoardView bv = new BoardView(getApplicationContext());
+                    if (i == 4)
+                        bv.setWinner(true);
+                    if (i == 7)
+                        bv.setWinner(false);
                     mBoardView.addView(buildEmptyBoard(bv));
                 }
                 break;

@@ -46,6 +46,7 @@ public class BoardView extends ViewGroup {
     private int childSize;
     private int mColumnCount;
     private int mMaxChildren;
+    private int winner;
     private LayoutParams layoutParamsChild;
 
     public BoardView(Context context) {
@@ -69,6 +70,7 @@ public class BoardView extends ViewGroup {
         layoutParamsChild = null;
         childSize = 0;
         a.recycle();
+        winner = 0;
 
         mGridPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mGridPaint.setStyle(Paint.Style.STROKE);
@@ -108,8 +110,8 @@ public class BoardView extends ViewGroup {
             col = i % mColumnCount;
             View child = getChildAt(i);
             child.setLayoutParams(layoutParamsChild);
-            left = (int) (col * child.getMeasuredWidth() +  Math.ceil(mGridPaint.getStrokeWidth()));
-            top = (int) (row * child.getMeasuredHeight() +  Math.ceil(mGridPaint.getStrokeWidth()));
+            left = (col * child.getMeasuredWidth());
+            top = (row * child.getMeasuredHeight());
 
             child.layout(left, top, left + child.getMeasuredWidth(), top + child.getMeasuredHeight());
         }
@@ -124,6 +126,12 @@ public class BoardView extends ViewGroup {
         canvas.drawLine((2 * childSize), (0 * childSize), (2 * childSize), (3 * childSize), mGridPaint);
         canvas.drawLine((0 * childSize), (1 * childSize), (3 * childSize), (1 * childSize), mGridPaint);
         canvas.drawLine((0 * childSize), (2 * childSize), (3 * childSize), (2 * childSize), mGridPaint);
+
+        //fixme MAKE BETER
+        if (winner == 1)
+            canvas.drawColor(Color.argb(122, 255, 0, 0));
+        if (winner == -1)
+            canvas.drawColor(Color.argb(122, 0, 255, 255));
     }
 
     public void addAllViews(List<View> children) {
@@ -196,5 +204,9 @@ public class BoardView extends ViewGroup {
 
     public int getMaxChildren() {
         return mMaxChildren;
+    }
+
+    public void setWinner(boolean cross) {
+        winner = (cross) ? 1 : -1;
     }
 }

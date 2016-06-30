@@ -17,13 +17,11 @@
 package com.game.prayansh.ultimatetictactoe.ui;
 
 import android.content.Context;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.game.prayansh.ultimatetictactoe.R;
 
@@ -91,7 +89,6 @@ public class CellView extends ImageView {
     }
 
     private void redraw() {
-//        setImageBitmap(BitmapFactory.decodeResource(getResources(), mResource));
         setImageResource(mResource);
     }
 
