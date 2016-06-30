@@ -30,8 +30,8 @@ import com.game.prayansh.ultimatetictactoe.R;
  */
 public class CellView extends ImageView {
 
-    private static final int CROSS_RESOURCE = R.drawable.cross;
-    private static final int CIRCLE_RESOURCE = R.drawable.circle;
+    public static final int CROSS_RESOURCE = R.drawable.cross;
+    public static final int CIRCLE_RESOURCE = R.drawable.circle;
     private int mResource;
 
     public CellView(Context context) {
