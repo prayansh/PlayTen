@@ -118,7 +118,7 @@ public class BoardFragment extends AppCompatActivity {
             R.id.c20, R.id.c21, R.id.c22,})
     public void play(TextView tv) {
         try {
-            if (mGame.getContextBoard() == -1)
+            if (mGame.getContextBoardIndex() == -1)
                 mGame.setContextBoard(contextIndex);
             if (contextIndex != mGame.getContextBoard())
                 Toast.makeText(this, "You can't Play here", Toast.LENGTH_SHORT).show();

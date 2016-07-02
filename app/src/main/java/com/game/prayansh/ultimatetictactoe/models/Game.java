@@ -24,44 +24,52 @@ import com.game.prayansh.ultimatetictactoe.exceptions.GameOverException;
 import com.game.prayansh.ultimatetictactoe.exceptions.InvalidMoveException;
 
 public class Game {
-    private CellVal player;
-    private Board[] boards;
-    private Board equivalent; // The board equivalent of the game_board
-    private int contextBoard;
+    private Board[] gameBoards;
+    private Board equivalentBoard;
+    private TTTStack moves;
 
     public Game() {
-        boards = new Board[9];
-        equivalent = new Board();
-        for (int i = 0; i < boards.length; i++) {
-            boards[i] = new Board();
+        gameBoards = new Board[9];
+        equivalentBoard = new Board();
+        for (int i = 0; i < gameBoards.length; i++) {
+            gameBoards[i] = new Board();
         }
-        contextBoard = -1;
-        player = CellVal.X;
+        moves = new TTTStack();
     }
 
-    public Game(Board[] boards, CellVal player) {
-        this.boards = boards;
-        this.player = player;
-        updateEquivalentBoard();
+    public Game(TTTStack stack) {
+        moves = stack;
+        updateGameBoard(stack);
     }
 
-    public Board getInContextBoard() {
-        return boards[contextBoard];
-    }
+    private void updateGameBoard(TTTStack stack) {
 
-    public int getContextBoard() {
-        return contextBoard;
-    }
-
-    public CellVal getPlayer() {
-        return player;
     }
 
     /**
-     * To be called for first move to decide starting context board
+     * Returns board index to play on
+     *
+     * @return -1 for free hit
      */
-    public void setContextBoard(int val) {
-        contextBoard = val;
+    public Board getContextGameBoard() {
+        return gameBoards[getContextBoardIndex()];
+    }
+
+    /**
+     * Returns board index to play on
+     *
+     * @return -1 for free hit
+     */
+    public int getContextBoardIndex() {
+        return (moves.top() != -1) ? moves.peek().getCellNo() : -1;
+    }
+
+    public void setContextBoard(int index) {
+        moves.setContextIndex(index);
+    }
+
+    public CellVal getPlayer() {
+        return (moves.top() % 2 == 0) ? CellVal.O : CellVal.X;
     }
 
     /**
@@ -71,59 +79,52 @@ public class Game {
      * contextboard = -1 if free hit
      * togglePlayer
      */
-    public int playMove(int position) throws InvalidMoveException, GameOverException {
-        boolean valid = getInContextBoard().setCellAt(position, player);
-        if (!valid) {
-            throw new InvalidMoveException("Invalid Move for Player " + player.name() + ":" + position);
+    public Move playMove(int position) throws InvalidMoveException, GameOverException {
+        boolean valid = getContextGameBoard().setCellAt(position, getPlayer());
+        Move m = new Move(getContextBoardIndex(), position, moves.getFlag());
+        if (!valid && !moves.push(m)) {
+            throw new InvalidMoveException("Invalid Move for Player " + getPlayer().name() + ":" + position);
         }
+
         updateEquivalentBoard();
-        contextBoard = position;
-        if (getInContextBoard().solved()) {
-            int index = contextBoard;
-            contextBoard = -1;
+        if (getContextGameBoard().solved()) {
+            moves.setContextIndex(-1);
         }
         if (checkWinner())
-            throw new GameOverException("Player " + player.name() + " has won", player);
-        togglePlayer();
-        return contextBoard;
-    }
-
-    private void togglePlayer() {
-        switch (player) {
-            case X:
-                player = CellVal.O;
-                break;
-            case O:
-                player = CellVal.X;
-                break;
-        }
+            throw new GameOverException("Player " + getPlayer().name() + " has won", getPlayer());
+        return m;
     }
 
     public boolean checkWinner() {
-        return (equivalent.solved() && equivalent.winner() == player);
+        return (equivalentBoard.solved() && equivalentBoard.winner() == getPlayer());
     }
 
     private void updateEquivalentBoard() {
         for (int i = 0; i < 9; i++) {
-            if (boards[i].solved()) {
-                CellVal winner = boards[i].winner();
-                equivalent.setCellAt(i, winner);
+            if (gameBoards[i].solved()) {
+                CellVal winner = gameBoards[i].winner();
+                equivalentBoard.setCellAt(i, winner);
             }
         }
     }
 
     public Board[] getBoards() {
-        return boards;
+        return gameBoards;
     }
 
     public Board getEquivalent() {
-        return equivalent;
+        return equivalentBoard;
     }
 
     public Bundle toBundle() {
         Bundle thisInstance = new Bundle();
-        thisInstance.putSerializable(GameActivity.STATE_PLAYER, player);
-        thisInstance.putParcelableArray(GameActivity.STATE_BOARDS, boards);
+        thisInstance.putSerializable(GameActivity.STATE_PLAYER, getPlayer());
+        thisInstance.putParcelableArray(GameActivity.STATE_BOARDS, getBoards());
         return thisInstance;
+    }
+
+    public Move undo() {
+        Move m = moves.pop();
+        return m;
     }
 }

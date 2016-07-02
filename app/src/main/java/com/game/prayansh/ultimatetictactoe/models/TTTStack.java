@@ -22,15 +22,27 @@ package com.game.prayansh.ultimatetictactoe.models;
 public class TTTStack {
     private static final int MAX_CAPACITY = 81;
     private int top;
+    private int contextIndex;
     private Move[] data;
+    private boolean freeHit;
 
     public TTTStack() {
         top = -1;
+        contextIndex = -1;
+        freeHit = true;
         data = new Move[MAX_CAPACITY];
     }
 
-    public void push(Move m) {
-        data[++top] = m;
+    public int top() {
+        return top;
+    }
+
+    public boolean push(Move m) {
+        freeHit = false;
+        if (m.getBoardNo() == contextIndex)
+            data[++top] = m;
+        else return false;
+        return robust();
     }
 
     public Move pop() {
@@ -54,6 +66,19 @@ public class TTTStack {
                 flag = false;
         }
         return flag;
+    }
+
+    public int getContextIndex() {
+        return contextIndex;
+    }
+
+    public boolean getFlag() {
+        return freeHit;
+    }
+
+    public void setContextIndex(int contextIndex) {
+        this.contextIndex = contextIndex;
+        freeHit = true;
     }
 }
 
