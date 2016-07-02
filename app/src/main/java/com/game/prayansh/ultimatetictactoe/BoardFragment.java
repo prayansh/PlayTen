@@ -120,7 +120,7 @@ public class BoardFragment extends AppCompatActivity {
         try {
             if (mGame.getContextBoardIndex() == -1)
                 mGame.setContextBoard(contextIndex);
-            if (contextIndex != mGame.getContextBoard())
+            if (contextIndex != mGame.getContextBoardIndex())
                 Toast.makeText(this, "You can't Play here", Toast.LENGTH_SHORT).show();
             else {
                 int index = Integer.parseInt(tv.getContentDescription().toString());

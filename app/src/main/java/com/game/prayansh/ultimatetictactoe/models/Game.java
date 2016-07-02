@@ -29,21 +29,32 @@ public class Game {
     private TTTStack moves;
 
     public Game() {
-        gameBoards = new Board[9];
-        equivalentBoard = new Board();
-        for (int i = 0; i < gameBoards.length; i++) {
-            gameBoards[i] = new Board();
-        }
+        initBoards();
         moves = new TTTStack();
     }
 
     public Game(TTTStack stack) {
         moves = stack;
-        updateGameBoard(stack);
+        updateGameBoard();
     }
 
-    private void updateGameBoard(TTTStack stack) {
+    private void initBoards() {
+        gameBoards = new Board[9];
+        equivalentBoard = new Board();
+        for (int i = 0; i < gameBoards.length; i++) {
+            gameBoards[i] = new Board();
+        }
+    }
 
+    private void updateGameBoard() {
+        initBoards();
+        int i = 0;
+        for (Move m : moves) {
+            CellVal player = (i % 2 == 0) ? CellVal.X : CellVal.O;
+            gameBoards[m.getBoardNo()].setCellAt(m.getCellNo(), player);
+            i++;
+        }
+        updateEquivalentBoard();
     }
 
     /**
@@ -61,7 +72,7 @@ public class Game {
      * @return -1 for free hit
      */
     public int getContextBoardIndex() {
-        return (moves.top() != -1) ? moves.peek().getCellNo() : -1;
+        return moves.getContextIndex();
     }
 
     public void setContextBoard(int index) {
@@ -77,17 +88,20 @@ public class Game {
      * update equivalent board
      * produce the next context board, if valid move
      * contextboard = -1 if free hit
-     * togglePlayer
+     *
+     * @see - check for contextboard = -1 before calling
      */
     public Move playMove(int position) throws InvalidMoveException, GameOverException {
+        if (getContextBoardIndex() == -1)
+            throw new IllegalStateException("No Context Board");
         boolean valid = getContextGameBoard().setCellAt(position, getPlayer());
         Move m = new Move(getContextBoardIndex(), position, moves.getFlag());
         if (!valid && !moves.push(m)) {
             throw new InvalidMoveException("Invalid Move for Player " + getPlayer().name() + ":" + position);
         }
-
-        updateEquivalentBoard();
         if (getContextGameBoard().solved()) {
+            CellVal winner = getContextGameBoard().winner();
+            equivalentBoard.setCellAt(getContextBoardIndex(), winner);
             moves.setContextIndex(-1);
         }
         if (checkWinner())
@@ -118,13 +132,13 @@ public class Game {
 
     public Bundle toBundle() {
         Bundle thisInstance = new Bundle();
-        thisInstance.putSerializable(GameActivity.STATE_PLAYER, getPlayer());
-        thisInstance.putParcelableArray(GameActivity.STATE_BOARDS, getBoards());
+        thisInstance.putParcelable(GameActivity.STATE_BOARDS, moves);
         return thisInstance;
     }
 
     public Move undo() {
         Move m = moves.pop();
+        getBoards()[m.getBoardNo()].clearCellAt(m.getCellNo());
         return m;
     }
 }

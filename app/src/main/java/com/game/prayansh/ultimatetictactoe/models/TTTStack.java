@@ -16,11 +16,16 @@
 
 package com.game.prayansh.ultimatetictactoe.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.util.Iterator;
+
 /**
  * Created by Prayansh on 16-06-30.
  */
-public class TTTStack {
-    private static final int MAX_CAPACITY = 81;
+public class TTTStack implements Iterable<Move>, Parcelable {
+    public static final int MAX_CAPACITY = 81;
     private int top;
     private int contextIndex;
     private Move[] data;
@@ -33,15 +38,35 @@ public class TTTStack {
         data = new Move[MAX_CAPACITY];
     }
 
+    protected TTTStack(Parcel in) {
+        top = in.readInt();
+        contextIndex = in.readInt();
+        data = in.createTypedArray(Move.CREATOR);
+        freeHit = in.readByte() != 0;
+    }
+
+    public static final Creator<TTTStack> CREATOR = new Creator<TTTStack>() {
+        @Override
+        public TTTStack createFromParcel(Parcel in) {
+            return new TTTStack(in);
+        }
+
+        @Override
+        public TTTStack[] newArray(int size) {
+            return new TTTStack[size];
+        }
+    };
+
     public int top() {
         return top;
     }
 
     public boolean push(Move m) {
         freeHit = false;
-        if (m.getBoardNo() == contextIndex)
+        if (m.getBoardNo() == contextIndex) {
             data[++top] = m;
-        else return false;
+            contextIndex = m.getCellNo();
+        } else return false;
         return robust();
     }
 
@@ -79,6 +104,47 @@ public class TTTStack {
     public void setContextIndex(int contextIndex) {
         this.contextIndex = contextIndex;
         freeHit = true;
+    }
+
+    @Override
+    public Iterator iterator() {
+        return new StackIterator();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(top);
+        dest.writeInt(contextIndex);
+        dest.writeByte((byte) (freeHit ? 1 : 0));
+        dest.writeParcelableArray(data, flags);
+    }
+
+    private class StackIterator implements Iterator {
+        private int cur;
+
+        public StackIterator() {
+            cur = 0;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return cur <= top;
+        }
+
+        @Override
+        public Move next() {
+            return data[cur++];
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException("You can't remove an element");
+        }
     }
 }
 

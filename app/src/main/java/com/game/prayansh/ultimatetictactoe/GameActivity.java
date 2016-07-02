@@ -94,7 +94,7 @@ public class GameActivity extends AppCompatActivity {
         for (View v : highlights) {
             v.setVisibility(View.GONE);
         }
-        int index = GameUI.getInstance().getGame().getContextBoard();
+        int index = GameUI.getInstance().getGame().getContextBoardIndex();
         if (index != -1)
             highlights.get(index).setVisibility(View.VISIBLE);
         Log.i(TAG, "Highlighted " + (index + 1) + " board");
@@ -257,7 +257,7 @@ public class GameActivity extends AppCompatActivity {
             CellVal player = (CellVal) bundle.getSerializable(STATE_PLAYER);
             Board[] boards = (Board[]) bundle.getParcelableArray(STATE_BOARDS);
 
-            GameUI.recreate(new Game(boards, player), gameBoards);
+//            GameUI.recreate(new Game(boards, player), gameBoards);
 
             mTurnTv.setText(Utils.getPlayerText());
             GameUI.getInstance().setGameBoards(gameBoards);
