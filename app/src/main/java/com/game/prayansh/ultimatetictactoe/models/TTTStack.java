@@ -87,7 +87,7 @@ public class TTTStack implements Iterable<Move>, Parcelable {
             return true;
         boolean flag = true;
         for (int i = 0; i < top - 1; i++) {
-            if (data[i].getBoardNo() != data[i + 1].getCellNo())
+            if (data[i + 1].getBoardNo() != data[i].getCellNo())
                 flag = false;
         }
         return flag;

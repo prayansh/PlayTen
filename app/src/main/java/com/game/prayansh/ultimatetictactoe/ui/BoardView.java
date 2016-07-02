@@ -194,6 +194,10 @@ public class BoardView extends ViewGroup {
         mGridPaint.setColor(paint);
     }
 
+    public void setBorderSize(float size){
+        mGridPaint.setStrokeWidth(size);
+    }
+
     public int getChildSize() {
         return childSize;
     }

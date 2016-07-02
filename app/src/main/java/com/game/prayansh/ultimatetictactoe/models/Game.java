@@ -80,13 +80,12 @@ public class Game {
     }
 
     public CellVal getPlayer() {
-        return (moves.top() % 2 == 0) ? CellVal.O : CellVal.X;
+        return (moves.top() % 2 == 0) ? CellVal.X : CellVal.O;
     }
 
     /**
      * Place the player at position in context board
      * update equivalent board
-     * produce the next context board, if valid move
      * contextboard = -1 if free hit
      *
      * @see - check for contextboard = -1 before calling
@@ -96,9 +95,10 @@ public class Game {
             throw new IllegalStateException("No Context Board");
         boolean valid = getContextGameBoard().setCellAt(position, getPlayer());
         Move m = new Move(getContextBoardIndex(), position, moves.getFlag());
-        if (!valid && !moves.push(m)) {
+        if (!valid || !moves.push(m)) {
             throw new InvalidMoveException("Invalid Move for Player " + getPlayer().name() + ":" + position);
         }
+        //Move has been added at this point
         if (getContextGameBoard().solved()) {
             CellVal winner = getContextGameBoard().winner();
             equivalentBoard.setCellAt(getContextBoardIndex(), winner);

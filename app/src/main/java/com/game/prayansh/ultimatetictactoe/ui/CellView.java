@@ -25,14 +25,14 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.game.prayansh.ultimatetictactoe.R;
+import com.game.prayansh.ultimatetictactoe.models.CellVal;
 
 /**
  * Created by Prayansh on 16-06-26.
  */
 public class CellView extends ImageView {
 
-    public static final int CROSS_RESOURCE = R.drawable.cross;
-    public static final int CIRCLE_RESOURCE = R.drawable.circle;
+    private int crossRes, circleRes, crossTint, circleTint;
     private int mResource;
     private int block, cell;
 
@@ -50,16 +50,6 @@ public class CellView extends ImageView {
         cell = block = -1;
         int padding = context.getResources().getDimensionPixelSize(R.dimen.cell_margin);
         setPadding(padding, padding, padding, padding);
-        setColorFilter(Color.argb(255, 255, 255, 255));
-        setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                setCircle();
-                Toast.makeText(v.getContext(),
-                        "Pressed " + cell + " in " + block, Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
     }
 
     public void setBlock(int block) {
@@ -79,13 +69,30 @@ public class CellView extends ImageView {
     }
 
     private void setCross() {
-        mResource = CROSS_RESOURCE;
+        mResource = crossRes;
+        setColorFilter(crossTint);
         redraw();
     }
 
     private void setCircle() {
-        mResource = CIRCLE_RESOURCE;
+        mResource = circleRes;
+        setColorFilter(circleTint);
         redraw();
+    }
+
+    public void mark(CellVal player){
+        switch (player){
+            case X:
+                setCross();
+                break;
+            case O:
+                setCircle();
+                break;
+            case B:
+                // Redundant code but for completion's sake
+                setEmpty();
+                break;
+        }
     }
 
     private void setEmpty() {
@@ -96,4 +103,13 @@ public class CellView extends ImageView {
         setImageResource(mResource);
     }
 
+    public void setCircleResource(int circle, int colorCircle) {
+        circleRes = circle;
+        circleTint = colorCircle;
+    }
+
+    public void setCrossResource(int cross, int colorCross) {
+        crossRes = cross;
+        crossTint = colorCross;
+    }
 }

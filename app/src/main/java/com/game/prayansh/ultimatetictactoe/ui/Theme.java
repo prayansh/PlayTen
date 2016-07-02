@@ -20,16 +20,18 @@ package com.game.prayansh.ultimatetictactoe.ui;
  * Created by Prayansh on 16-07-02.
  */
 public class Theme {
-    private int gridColor;
-    private int background;
-    private int cross;
-    private int colorCross;
-    private int circle;
-    private int colorCircle;
-    private int color;
+    private final int textColor;
+    private final int gridColor;
+    private final int background;
+    private final int cross;
+    private final int colorCross;
+    private final int circle;
+    private final int colorCircle;
+    private final int color;
+    private final int blank;
 
     public Theme(int gridColor, int background,
-                 int cross, int colorCross, int circle, int colorCircle, int color) {
+                 int cross, int colorCross, int circle, int colorCircle, int color, int blank, int textColor) {
         this.gridColor = gridColor;
         this.background = background;
         this.cross = cross;
@@ -37,61 +39,43 @@ public class Theme {
         this.circle = circle;
         this.colorCircle = colorCircle;
         this.color = color;
+        this.blank = blank;
+        this.textColor = textColor;
     }
 
     public int getGridColor() {
         return gridColor;
     }
 
-    public void setGridColor(int gridColor) {
-        this.gridColor = gridColor;
-    }
-
     public int getBackground() {
         return background;
-    }
-
-    public void setBackground(int background) {
-        this.background = background;
     }
 
     public int getCross() {
         return cross;
     }
 
-    public void setCross(int cross) {
-        this.cross = cross;
-    }
-
     public int getColorCross() {
         return colorCross;
-    }
-
-    public void setColorCross(int colorCross) {
-        this.colorCross = colorCross;
     }
 
     public int getCircle() {
         return circle;
     }
 
-    public void setCircle(int circle) {
-        this.circle = circle;
-    }
-
     public int getColorCircle() {
         return colorCircle;
-    }
-
-    public void setColorCircle(int colorCircle) {
-        this.colorCircle = colorCircle;
     }
 
     public int getColor() {
         return color;
     }
 
-    public void setColor(int color) {
-        this.color = color;
+    public int getBlank() {
+        return blank;
+    }
+
+    public int getTextColor() {
+        return textColor;
     }
 }

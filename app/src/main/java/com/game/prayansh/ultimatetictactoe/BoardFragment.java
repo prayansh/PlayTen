@@ -187,7 +187,7 @@ public class BoardFragment extends AppCompatActivity {
     }
 
     private void snap() {
-        GameUI.getInstance().replaceBoard(contextIndex, Utils.screenShot(findViewById(R.id.contentView)));
+//        GameUI.getInstance().replaceBoard(contextIndex, Utils.screenShot(findViewById(R.id.contentView)));
     }
 
     @Override

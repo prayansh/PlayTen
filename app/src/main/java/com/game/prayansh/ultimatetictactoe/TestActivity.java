@@ -18,7 +18,6 @@ package com.game.prayansh.ultimatetictactoe;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.ViewGroup;
 
 import com.game.prayansh.ultimatetictactoe.ui.BoardView;
 import com.game.prayansh.ultimatetictactoe.ui.CellView;
@@ -31,7 +30,7 @@ import butterknife.ButterKnife;
  */
 public class TestActivity extends AppCompatActivity {
 
-    @BindView(R.id.view2)
+    @BindView(R.id.board)
     BoardView mBoardView;
 
     @Override

@@ -76,221 +76,221 @@ public class GameActivity extends AppCompatActivity {
     public static final String STATE_BITMAPS = "bitmaps";
     private boolean gameStart;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.game_activity);
-        ButterKnife.bind(this);
-        setupStart();
-        Toast.makeText(this, "Game Ready", Toast.LENGTH_LONG).show();
-    }
-
-    private void setupStart() {
-        mTurnTv.setText(getString(R.string.start));
-        gameStart = false;
-    }
-
-    private void highlight() {
-        for (View v : highlights) {
-            v.setVisibility(View.GONE);
-        }
-        int index = GameUI.getInstance().getGame().getContextBoardIndex();
-        if (index != -1)
-            highlights.get(index).setVisibility(View.VISIBLE);
-        Log.i(TAG, "Highlighted " + (index + 1) + " board");
-    }
-
-    private void setupGame() {
-        gameStart = true;
-        Bitmap[] bitmaps = new Bitmap[9];
-        for (int i = 0; i < bitmaps.length; i++) {
-            bitmaps[i] = BitmapFactory.decodeResource(getResources(),
-                    R.drawable.placeholder_holder);// TODO change bitmap
-            boards.get(i).setImageBitmap(bitmaps[i]);
-        }
-        mTurnTv.setText(Utils.getPlayerText());
-        GameUI.getInstance().setGameBoards(bitmaps);
-        Log.d(TAG, "Game is ready");
-    }
-
-    @OnClick({
-            R.id.c00, R.id.c01, R.id.c02,
-            R.id.c10, R.id.c11, R.id.c12,
-            R.id.c20, R.id.c21, R.id.c22})
-    public void maximiseBoard(ImageView iv) {
-        if (gameStart) {
-            int index = Integer.parseInt(iv.getContentDescription().toString());
-            Log.d(TAG, "Maximising " + (index + 1) + " board");
-            Intent intent = new Intent(this, BoardFragment.class);
-            intent.putExtra(getString(R.string.board_data), index);
-            startActivityForResult(intent, MyApplication.BOARD_REQUEST_CODE);
-        }
-    }
-
-    public void newGame() {
-        GameUI.getInstance().newGame();
-        setupGame();
-        highlight();
-        for (View v : boards) {
-            v.setClickable(true);
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Bundle extras = data.getExtras();
-        if (extras != null)
-            if (extras.getBoolean(getString(R.string.any_changes))) {
-                updateBoard();
-                Log.d(TAG, "Changes made");
-            }
-    }
-
-    private void updateBoard() {
-        int i = 0;
-        for (Bitmap bm : GameUI.getInstance().getGameBoards()) {
-            boards.get(i).setImageBitmap(bm);
-            i++;
-        }
-        for (i = 0; i < GameUI.getInstance().getGame().getBoards().length; i++) {
-            if (GameUI.getInstance().getGame().getBoards()[i].solved())
-                boards.get(i).setClickable(false);
-
-        }
-        mTurnTv.setText(Utils.getPlayerText());
-        highlight();
-    }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-
-        // Trigger the initial hide() shortly after the activity has been
-        // created, to briefly hint to the user that UI controls
-        // are available.
-        delayedHide(100);
-    }
-
-    /**
-     * Detects and toggles immersive mode (also known as "hidey bar" mode).
-     */
-    public void toggleHideyBar() {
-
-        // BEGIN_INCLUDE (get_current_ui_flags)
-        // The UI options currently enabled are represented by a bitfield.
-        // getSystemUiVisibility() gives us that bitfield.
-        int uiOptions = getWindow().getDecorView().getSystemUiVisibility();
-        int newUiOptions = uiOptions;
-        // END_INCLUDE (get_current_ui_flags)
-        // BEGIN_INCLUDE (toggle_ui_flags)
-        boolean isImmersiveModeEnabled =
-                ((uiOptions | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY) == uiOptions);
-
-        // Navigation bar hiding:  Backwards compatible to ICS.
-        if (Build.VERSION.SDK_INT >= 14) {
-            newUiOptions ^= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-        }
-
-        // Status bar hiding: Backwards compatible to Jellybean
-        if (Build.VERSION.SDK_INT >= 16) {
-            newUiOptions ^= View.SYSTEM_UI_FLAG_FULLSCREEN;
-        }
-
-        // Immersive mode: Backward compatible to KitKat.
-        // Note that this flag doesn't do anything by itself, it only augments the behavior
-        // of HIDE_NAVIGATION and FLAG_FULLSCREEN.  For the purposes of this sample
-        // all three flags are being toggled together.
-        // Note that there are two immersive mode UI flags, one of which is referred to as "sticky".
-        // Sticky immersive mode differs in that it makes the navigation and status bars
-        // semi-transparent, and the UI flag does not get cleared when the user interacts with
-        // the screen.
-        if (Build.VERSION.SDK_INT >= 18) {
-            newUiOptions ^= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-        }
-
-        getWindow().getDecorView().setSystemUiVisibility(newUiOptions);
-        //END_INCLUDE (set_ui_flags)
-    }
-
-
-    private final Handler mHideHandler = new Handler();
-    private final Runnable mHideRunnable = new Runnable() {
-        @Override
-        public void run() {
-            toggleHideyBar();
-        }
-    };
-
-    /**
-     * Schedules a call to hide() in [delay] milliseconds, canceling any
-     * previously scheduled calls.
-     */
-    private void delayedHide(int delayMillis) {
-        mHideHandler.removeCallbacks(mHideRunnable);
-        mHideHandler.postDelayed(mHideRunnable, delayMillis);
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle savedInstanceState) {
-        // Save the user's current game state
-        savedInstanceState.putBundle(STATE_GAME, GameUI.getInstance().getGame().toBundle());
-        savedInstanceState.putSerializable(STATE_BITMAPS, GameUI.getInstance().getGameBoards());
-
-        // Always call the superclass so it can save the view hierarchy state
-        super.onSaveInstanceState(savedInstanceState);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        restoreGame(savedInstanceState);
-    }
-
-    private void restoreGame(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            Bitmap[] gameBoards = (Bitmap[]) savedInstanceState.getSerializable(STATE_BITMAPS);
-            Bundle bundle = savedInstanceState.getBundle(STATE_GAME);
-            if (bundle == null)
-                return;
-
-            CellVal player = (CellVal) bundle.getSerializable(STATE_PLAYER);
-            Board[] boards = (Board[]) bundle.getParcelableArray(STATE_BOARDS);
-
-//            GameUI.recreate(new Game(boards, player), gameBoards);
-
-            mTurnTv.setText(Utils.getPlayerText());
-            GameUI.getInstance().setGameBoards(gameBoards);
-            highlight();
-            Log.d(TAG, "Game Resumed");
-        } else {
-            Log.e(TAG, "Saved Instance State Empty");
-        }
-
-    }
-
-    @OnClick(R.id.restart)
-    public void newGameDialog() {
-        if (gameStart) {
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-            alertDialogBuilder.setMessage(getString(R.string.reset));
-
-            alertDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface arg0, int arg1) {
-                    newGame();
-                }
-            });
-
-            alertDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                }
-            });
-
-            AlertDialog alertDialog = alertDialogBuilder.create();
-            alertDialog.show();
-        } else
-            newGame();
-    }
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.game_activity);
+//        ButterKnife.bind(this);
+//        setupStart();
+//        Toast.makeText(this, "Game Ready", Toast.LENGTH_LONG).show();
+//    }
+//
+//    private void setupStart() {
+//        mTurnTv.setText(getString(R.string.start));
+//        gameStart = false;
+//    }
+//
+//    private void highlight() {
+//        for (View v : highlights) {
+//            v.setVisibility(View.GONE);
+//        }
+//        int index = GameUI.getInstance().getGame().getContextBoardIndex();
+//        if (index != -1)
+//            highlights.get(index).setVisibility(View.VISIBLE);
+//        Log.i(TAG, "Highlighted " + (index + 1) + " board");
+//    }
+//
+//    private void setupGame() {
+//        gameStart = true;
+//        Bitmap[] bitmaps = new Bitmap[9];
+//        for (int i = 0; i < bitmaps.length; i++) {
+//            bitmaps[i] = BitmapFactory.decodeResource(getResources(),
+//                    R.drawable.placeholder_holder);// TODO change bitmap
+//            boards.get(i).setImageBitmap(bitmaps[i]);
+//        }
+//        mTurnTv.setText(Utils.getPlayerText());
+//        GameUI.getInstance().setGameBoards(bitmaps);
+//        Log.d(TAG, "Game is ready");
+//    }
+//
+//    @OnClick({
+//            R.id.c00, R.id.c01, R.id.c02,
+//            R.id.c10, R.id.c11, R.id.c12,
+//            R.id.c20, R.id.c21, R.id.c22})
+//    public void maximiseBoard(ImageView iv) {
+//        if (gameStart) {
+//            int index = Integer.parseInt(iv.getContentDescription().toString());
+//            Log.d(TAG, "Maximising " + (index + 1) + " board");
+//            Intent intent = new Intent(this, BoardFragment.class);
+//            intent.putExtra(getString(R.string.board_data), index);
+//            startActivityForResult(intent, MyApplication.BOARD_REQUEST_CODE);
+//        }
+//    }
+//
+//    public void newGame() {
+//        GameUI.getInstance().newGame();
+//        setupGame();
+//        highlight();
+//        for (View v : boards) {
+//            v.setClickable(true);
+//        }
+//    }
+//
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        Bundle extras = data.getExtras();
+//        if (extras != null)
+//            if (extras.getBoolean(getString(R.string.any_changes))) {
+//                updateBoard();
+//                Log.d(TAG, "Changes made");
+//            }
+//    }
+//
+//    private void updateBoard() {
+//        int i = 0;
+//        for (Bitmap bm : GameUI.getInstance().getGameBoards()) {
+//            boards.get(i).setImageBitmap(bm);
+//            i++;
+//        }
+//        for (i = 0; i < GameUI.getInstance().getGame().getBoards().length; i++) {
+//            if (GameUI.getInstance().getGame().getBoards()[i].solved())
+//                boards.get(i).setClickable(false);
+//
+//        }
+//        mTurnTv.setText(Utils.getPlayerText());
+//        highlight();
+//    }
+//
+//    @Override
+//    protected void onPostCreate(Bundle savedInstanceState) {
+//        super.onPostCreate(savedInstanceState);
+//
+//        // Trigger the initial hide() shortly after the activity has been
+//        // created, to briefly hint to the user that UI controls
+//        // are available.
+//        delayedHide(100);
+//    }
+//
+//    /**
+//     * Detects and toggles immersive mode (also known as "hidey bar" mode).
+//     */
+//    public void toggleHideyBar() {
+//
+//        // BEGIN_INCLUDE (get_current_ui_flags)
+//        // The UI options currently enabled are represented by a bitfield.
+//        // getSystemUiVisibility() gives us that bitfield.
+//        int uiOptions = getWindow().getDecorView().getSystemUiVisibility();
+//        int newUiOptions = uiOptions;
+//        // END_INCLUDE (get_current_ui_flags)
+//        // BEGIN_INCLUDE (toggle_ui_flags)
+//        boolean isImmersiveModeEnabled =
+//                ((uiOptions | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY) == uiOptions);
+//
+//        // Navigation bar hiding:  Backwards compatible to ICS.
+//        if (Build.VERSION.SDK_INT >= 14) {
+//            newUiOptions ^= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+//        }
+//
+//        // Status bar hiding: Backwards compatible to Jellybean
+//        if (Build.VERSION.SDK_INT >= 16) {
+//            newUiOptions ^= View.SYSTEM_UI_FLAG_FULLSCREEN;
+//        }
+//
+//        // Immersive mode: Backward compatible to KitKat.
+//        // Note that this flag doesn't do anything by itself, it only augments the behavior
+//        // of HIDE_NAVIGATION and FLAG_FULLSCREEN.  For the purposes of this sample
+//        // all three flags are being toggled together.
+//        // Note that there are two immersive mode UI flags, one of which is referred to as "sticky".
+//        // Sticky immersive mode differs in that it makes the navigation and status bars
+//        // semi-transparent, and the UI flag does not get cleared when the user interacts with
+//        // the screen.
+//        if (Build.VERSION.SDK_INT >= 18) {
+//            newUiOptions ^= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+//        }
+//
+//        getWindow().getDecorView().setSystemUiVisibility(newUiOptions);
+//        //END_INCLUDE (set_ui_flags)
+//    }
+//
+//
+//    private final Handler mHideHandler = new Handler();
+//    private final Runnable mHideRunnable = new Runnable() {
+//        @Override
+//        public void run() {
+//            toggleHideyBar();
+//        }
+//    };
+//
+//    /**
+//     * Schedules a call to hide() in [delay] milliseconds, canceling any
+//     * previously scheduled calls.
+//     */
+//    private void delayedHide(int delayMillis) {
+//        mHideHandler.removeCallbacks(mHideRunnable);
+//        mHideHandler.postDelayed(mHideRunnable, delayMillis);
+//    }
+//
+//    @Override
+//    protected void onSaveInstanceState(Bundle savedInstanceState) {
+//        // Save the user's current game state
+//        savedInstanceState.putBundle(STATE_GAME, GameUI.getInstance().getGame().toBundle());
+//        savedInstanceState.putSerializable(STATE_BITMAPS, GameUI.getInstance().getGameBoards());
+//
+//        // Always call the superclass so it can save the view hierarchy state
+//        super.onSaveInstanceState(savedInstanceState);
+//    }
+//
+//    @Override
+//    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+//        super.onRestoreInstanceState(savedInstanceState);
+//        restoreGame(savedInstanceState);
+//    }
+//
+//    private void restoreGame(Bundle savedInstanceState) {
+//        if (savedInstanceState != null) {
+//            Bitmap[] gameBoards = (Bitmap[]) savedInstanceState.getSerializable(STATE_BITMAPS);
+//            Bundle bundle = savedInstanceState.getBundle(STATE_GAME);
+//            if (bundle == null)
+//                return;
+//
+//            CellVal player = (CellVal) bundle.getSerializable(STATE_PLAYER);
+//            Board[] boards = (Board[]) bundle.getParcelableArray(STATE_BOARDS);
+//
+////            GameUI.recreate(new Game(boards, player), gameBoards);
+//
+//            mTurnTv.setText(Utils.getPlayerText());
+//            GameUI.getInstance().setGameBoards(gameBoards);
+//            highlight();
+//            Log.d(TAG, "Game Resumed");
+//        } else {
+//            Log.e(TAG, "Saved Instance State Empty");
+//        }
+//
+//    }
+//
+//    @OnClick(R.id.restart)
+//    public void newGameDialog() {
+//        if (gameStart) {
+//            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+//            alertDialogBuilder.setMessage(getString(R.string.reset));
+//
+//            alertDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface arg0, int arg1) {
+//                    newGame();
+//                }
+//            });
+//
+//            alertDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//                }
+//            });
+//
+//            AlertDialog alertDialog = alertDialogBuilder.create();
+//            alertDialog.show();
+//        } else
+//            newGame();
+//    }
 }
