@@ -33,6 +33,7 @@ public class CellView extends ImageView {
     public static final int CROSS_RESOURCE = R.drawable.cross;
     public static final int CIRCLE_RESOURCE = R.drawable.circle;
     private int mResource;
+    private int row, col;
 
     public CellView(Context context) {
         this(context, null);
@@ -52,9 +53,25 @@ public class CellView extends ImageView {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 setCircle();
-                return false;
+                return true;
             }
         });
+    }
+
+    public void setRow(int row) {
+        this.row = row;
+    }
+
+    public void setCol(int col) {
+        this.col = col;
+    }
+
+    public int getCol() {
+        return col;
+    }
+
+    public int getRow() {
+        return row;
     }
 
     private void setCross() {
