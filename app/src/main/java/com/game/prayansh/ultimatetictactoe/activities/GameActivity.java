@@ -16,6 +16,7 @@
 
 package com.game.prayansh.ultimatetictactoe.activities;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -69,6 +70,13 @@ public class GameActivity extends AppCompatActivity {
                 clickView(v);
             }
         };
+        setupThemeAndViews();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        setContentView(R.layout.gameplay_activity);
         setupThemeAndViews();
     }
 
