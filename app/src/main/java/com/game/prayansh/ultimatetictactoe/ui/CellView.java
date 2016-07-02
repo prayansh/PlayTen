@@ -22,6 +22,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.game.prayansh.ultimatetictactoe.R;
 
@@ -33,7 +34,7 @@ public class CellView extends ImageView {
     public static final int CROSS_RESOURCE = R.drawable.cross;
     public static final int CIRCLE_RESOURCE = R.drawable.circle;
     private int mResource;
-    private int row, col;
+    private int block, cell;
 
     public CellView(Context context) {
         this(context, null);
@@ -46,6 +47,7 @@ public class CellView extends ImageView {
     public CellView(final Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         setScaleType(ScaleType.CENTER_CROP);
+        cell = block = -1;
         int padding = context.getResources().getDimensionPixelSize(R.dimen.cell_margin);
         setPadding(padding, padding, padding, padding);
         setColorFilter(Color.argb(255, 255, 255, 255));
@@ -53,25 +55,27 @@ public class CellView extends ImageView {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 setCircle();
+                Toast.makeText(v.getContext(),
+                        "Pressed " + cell + " in " + block, Toast.LENGTH_SHORT).show();
                 return true;
             }
         });
     }
 
-    public void setRow(int row) {
-        this.row = row;
+    public void setBlock(int block) {
+        this.block = block;
     }
 
-    public void setCol(int col) {
-        this.col = col;
+    public void setCell(int cell) {
+        this.cell = cell;
     }
 
-    public int getCol() {
-        return col;
+    public int getCell() {
+        return cell;
     }
 
-    public int getRow() {
-        return row;
+    public int getBlock() {
+        return block;
     }
 
     private void setCross() {
@@ -82,23 +86,6 @@ public class CellView extends ImageView {
     private void setCircle() {
         mResource = CIRCLE_RESOURCE;
         redraw();
-    }
-
-    /**
-     * @param mark 0 - Cross ; 1 - Circle
-     */
-    public void mark(int mark) {
-        switch (mark) {
-            case -1:
-                setCircle();
-                break;
-            case 0:
-                setEmpty();
-                break;
-            case 1:
-                setCross();
-                break;
-        }
     }
 
     private void setEmpty() {

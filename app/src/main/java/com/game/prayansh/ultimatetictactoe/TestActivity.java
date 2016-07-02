@@ -45,7 +45,7 @@ public class TestActivity extends AppCompatActivity {
     private void setupBoard() {
         switch (mBoardView.getType()) {
             case 0:
-                buildEmptyBoard(mBoardView);
+                buildEmptyBoard(mBoardView, 0);
                 break;
             case 1:
                 for (int i = 0; i < mBoardView.getMaxChildren(); i++) {
@@ -54,15 +54,17 @@ public class TestActivity extends AppCompatActivity {
                         bv.setWinner(true);
                     if (i == 7)
                         bv.setWinner(false);
-                    mBoardView.addView(buildEmptyBoard(bv));
+                    mBoardView.addView(buildEmptyBoard(bv, i));
                 }
                 break;
         }
     }
 
-    private BoardView buildEmptyBoard(BoardView bv) {
+    private BoardView buildEmptyBoard(BoardView bv, int block) {
         for (int j = 0; j < mBoardView.getMaxChildren(); j++) {
             CellView cv = new CellView(getApplicationContext());
+            cv.setBlock(block);
+            cv.setCell(j);
             bv.addView(cv);
         }
         return bv;
