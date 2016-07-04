@@ -39,7 +39,6 @@ public class BoardView extends ViewGroup {
 
     private static final String TAG = "BoardViewLog";
 
-
     private static final int DEFAULT_COL_COUNT = 3;
 
     private Paint mGridPaint;
@@ -148,7 +147,8 @@ public class BoardView extends ViewGroup {
                 d.setBounds(PADDING, PADDING, getWidth() - PADDING, getHeight() - PADDING);
                 d.draw(canvas);
             }
-        } else if (highlight)
+        }
+        if (highlight)
             canvas.drawColor(Color.argb(122, 255, 255, 255));
 
     }
@@ -231,6 +231,7 @@ public class BoardView extends ViewGroup {
 
     public void setWinner(CellVal player) {
         winner = player.getVal();
+        invalidate();
     }
 
     public void setHighlight(boolean highlight) {

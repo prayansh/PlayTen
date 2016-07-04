@@ -29,7 +29,7 @@ public class ThemeManager {
     private static Theme theme;
 
     public static void setPrimary(Context context) {
-        
+
     }
 
     public static void setMinimal(Context context) {
@@ -37,7 +37,7 @@ public class ThemeManager {
                 R.drawable.minimal_background,
                 R.drawable.cross_minimal, 0,
                 R.drawable.circle_minimal, 0,
-                ContextCompat.getColor(context, R.color.concrete),
+                ContextCompat.getColor(context, R.color.mt_black),
                 R.drawable.blank_minimal,
                 Color.rgb(255, 255, 255));
     }

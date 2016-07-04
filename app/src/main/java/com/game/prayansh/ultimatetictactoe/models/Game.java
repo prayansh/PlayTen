@@ -138,8 +138,19 @@ public class Game {
 
     public Move undo() {
         Move m = moves.pop();
-        setContextBoardIndex(moves.peek().getCellNo());
-        getBoards()[m.getBoardNo()].clearCellAt(m.getCellNo());
+        if (isStarted()) {
+            setContextBoardIndex(moves.peek().getCellNo());
+            getBoards()[m.getBoardNo()].clearCellAt(m.getCellNo());
+        }
         return m;
+    }
+
+
+    public boolean isStarted() {
+        return moves.top() != -1;
+    }
+
+    public TTTStack getMoves() {
+        return moves;
     }
 }

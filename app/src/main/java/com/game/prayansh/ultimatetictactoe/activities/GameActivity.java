@@ -33,6 +33,7 @@ import com.game.prayansh.ultimatetictactoe.models.Board;
 import com.game.prayansh.ultimatetictactoe.models.CellVal;
 import com.game.prayansh.ultimatetictactoe.models.Game;
 import com.game.prayansh.ultimatetictactoe.models.Move;
+import com.game.prayansh.ultimatetictactoe.models.TTTStack;
 import com.game.prayansh.ultimatetictactoe.ui.BoardView;
 import com.game.prayansh.ultimatetictactoe.ui.CellView;
 import com.game.prayansh.ultimatetictactoe.ui.GameUI;
@@ -48,6 +49,7 @@ import butterknife.OnClick;
  */
 public class GameActivity extends AppCompatActivity {
 
+    private static final String STATE_STACK = "stack_state";
     @BindView(R.id.bg)
     View background;
     @BindView(R.id.board)
@@ -168,7 +170,6 @@ public class GameActivity extends AppCompatActivity {
         ((CellView) ((BoardView) gameBoard.getChildAt(block)).getChildAt(cell)).mark(CellVal.B);
         highlightContextBoards();
         checkWins();
-        gameBoard.invalidate();
     }
 
     @OnClick(R.id.bRestart)
@@ -193,5 +194,36 @@ public class GameActivity extends AppCompatActivity {
             bv.addView(cv);
         }
         return bv;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        // Save the user's current game state
+        savedInstanceState.putParcelable(STATE_STACK, GameUI.getInstance().getGame().getMoves());
+
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        TTTStack moveStack = savedInstanceState.getParcelable(STATE_STACK);
+        restoreGame(moveStack);
+    }
+
+    private void restoreGame(TTTStack moveStack) {
+        GameUI.recreate(moveStack);
+        int i = 0;
+        for (Move m : moveStack) {
+            int block = m.getBoardNo();
+            int cell = m.getCellNo();
+            CellVal player = (i % 2 == 0) ? CellVal.X : CellVal.O;
+            ((CellView) ((BoardView) gameBoard.getChildAt(block)).getChildAt(cell)).mark(player);
+            i++;
+        }
+        highlightContextBoards();
+        checkWins();
+        updatePlayerInfo();
     }
 }
