@@ -115,6 +115,7 @@ public class BoardView extends ViewGroup {
             col = i % mColumnCount;
             View child = getChildAt(i);
             child.setLayoutParams(layoutParamsChild);
+            child.setPadding(PADDING, PADDING, PADDING, PADDING);
             left = (col * child.getMeasuredWidth());
             top = (row * child.getMeasuredHeight());
 
