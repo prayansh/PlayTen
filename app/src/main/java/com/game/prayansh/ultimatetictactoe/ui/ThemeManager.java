@@ -26,9 +26,25 @@ import com.game.prayansh.ultimatetictactoe.R;
  * Created by Prayansh on 16-07-02.
  */
 public class ThemeManager {
-    public static Theme getPrimary(Context context) {
+    private static Theme theme;
+
+    public static void setPrimary(Context context) {
+        
+    }
+
+    public static void setMinimal(Context context) {
+        theme = new Theme(0,
+                R.drawable.minimal_background,
+                R.drawable.cross_minimal, 0,
+                R.drawable.circle_minimal, 0,
+                ContextCompat.getColor(context, R.color.concrete),
+                R.drawable.blank_minimal,
+                Color.rgb(255, 255, 255));
+    }
+
+    public static void setClassic(Context context) {
         int white = Color.rgb(255, 255, 255);
-        return new Theme(white,
+        theme = new Theme(white,
                 R.drawable.grad_blue,
                 R.drawable.cross, white,
                 R.drawable.circle, white,
@@ -37,11 +53,16 @@ public class ThemeManager {
                 white);
     }
 
-    public static Theme getMinimal() {
-        return null;
+    public static Theme getTheme() {
+        return theme;
     }
 
-    public static Theme getClassic() {
-        return null;
+    public static int getCross() {
+        return theme.getCross();
+    }
+
+
+    public static int getCircle() {
+        return theme.getCircle();
     }
 }

@@ -21,12 +21,14 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.game.prayansh.ultimatetictactoe.R;
+import com.game.prayansh.ultimatetictactoe.models.CellVal;
 
 import java.util.List;
 
@@ -48,6 +50,9 @@ public class BoardView extends ViewGroup {
     private int mMaxChildren;
     private int winner;
     private LayoutParams layoutParamsChild;
+    private boolean highlight;
+
+    private final int PADDING = 20;
 
     public BoardView(Context context) {
         this(context, null);
@@ -63,7 +68,7 @@ public class BoardView extends ViewGroup {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.BoardView, 0, defStyleAttr);
 
         int strokeWidth = a.getDimensionPixelSize(R.styleable.BoardView_separatorWidth, 1);
-        int strokeColor = a.getColor(R.styleable.BoardView_separatorColor, Color.WHITE);
+        int strokeColor = a.getColor(R.styleable.BoardView_separatorColor, Color.TRANSPARENT);
         mColumnCount = a.getInteger(R.styleable.BoardView_numColumns, DEFAULT_COL_COUNT);
         mMaxChildren = mColumnCount * mColumnCount;
         type = a.getInteger(R.styleable.BoardView_type, 0);
@@ -71,6 +76,7 @@ public class BoardView extends ViewGroup {
         childSize = 0;
         a.recycle();
         winner = 0;
+        highlight = false;
 
         mGridPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mGridPaint.setStyle(Paint.Style.STROKE);
@@ -120,18 +126,31 @@ public class BoardView extends ViewGroup {
     @Override
     protected void dispatchDraw(Canvas canvas) {
         //Let the framework do its thing
-        super.dispatchDraw(canvas);
+//        super.dispatchDraw(canvas);
         //TODO Simplify
-        canvas.drawLine((1 * childSize), (0 * childSize), (1 * childSize), (3 * childSize), mGridPaint);
-        canvas.drawLine((2 * childSize), (0 * childSize), (2 * childSize), (3 * childSize), mGridPaint);
-        canvas.drawLine((0 * childSize), (1 * childSize), (3 * childSize), (1 * childSize), mGridPaint);
-        canvas.drawLine((0 * childSize), (2 * childSize), (3 * childSize), (2 * childSize), mGridPaint);
-
+        if (winner == 0) {
+            super.dispatchDraw(canvas);
+            canvas.drawLine((1 * childSize), (0 * childSize), (1 * childSize), (3 * childSize), mGridPaint);
+            canvas.drawLine((2 * childSize), (0 * childSize), (2 * childSize), (3 * childSize), mGridPaint);
+            canvas.drawLine((0 * childSize), (1 * childSize), (3 * childSize), (1 * childSize), mGridPaint);
+            canvas.drawLine((0 * childSize), (2 * childSize), (3 * childSize), (2 * childSize), mGridPaint);
+        }
         //fixme MAKE BETER
-        if (winner == 1)
-            canvas.drawColor(Color.argb(122, 255, 0, 0));
-        if (winner == -1)
-            canvas.drawColor(Color.argb(122, 0, 255, 255));
+        if (winner == 1) {
+            Drawable d = getResources().getDrawable(ThemeManager.getCross());
+            if (d != null) {
+                d.setBounds(PADDING, PADDING, getWidth() - PADDING, getHeight() - PADDING);
+                d.draw(canvas);
+            }
+        } else if (winner == -1) {
+            Drawable d = getResources().getDrawable(ThemeManager.getCircle());
+            if (d != null) {
+                d.setBounds(PADDING, PADDING, getWidth() - PADDING, getHeight() - PADDING);
+                d.draw(canvas);
+            }
+        } else if (highlight)
+            canvas.drawColor(Color.argb(122, 255, 255, 255));
+
     }
 
     public void addAllViews(List<View> children) {
@@ -194,7 +213,7 @@ public class BoardView extends ViewGroup {
         mGridPaint.setColor(paint);
     }
 
-    public void setBorderSize(float size){
+    public void setBorderSize(float size) {
         mGridPaint.setStrokeWidth(size);
     }
 
@@ -210,7 +229,11 @@ public class BoardView extends ViewGroup {
         return mMaxChildren;
     }
 
-    public void setWinner(boolean cross) {
-        winner = (cross) ? 1 : -1;
+    public void setWinner(CellVal player) {
+        winner = player.getVal();
+    }
+
+    public void setHighlight(boolean highlight) {
+        this.highlight = highlight;
     }
 }

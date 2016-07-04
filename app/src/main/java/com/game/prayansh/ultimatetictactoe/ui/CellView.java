@@ -32,9 +32,9 @@ import com.game.prayansh.ultimatetictactoe.models.CellVal;
  */
 public class CellView extends ImageView {
 
-    private int crossRes, circleRes, crossTint, circleTint;
     private int mResource;
     private int block, cell;
+    private int blankResource;
 
     public CellView(Context context) {
         this(context, null);
@@ -69,19 +69,15 @@ public class CellView extends ImageView {
     }
 
     private void setCross() {
-        mResource = crossRes;
-        setColorFilter(crossTint);
-        redraw();
+        mResource = ThemeManager.getCross();
     }
 
     private void setCircle() {
-        mResource = circleRes;
-        setColorFilter(circleTint);
-        redraw();
+        mResource = ThemeManager.getCircle();
     }
 
-    public void mark(CellVal player){
-        switch (player){
+    public void mark(CellVal player) {
+        switch (player) {
             case X:
                 setCross();
                 break;
@@ -89,27 +85,21 @@ public class CellView extends ImageView {
                 setCircle();
                 break;
             case B:
-                // Redundant code but for completion's sake
                 setEmpty();
                 break;
         }
+        redraw();
     }
 
     private void setEmpty() {
-        throw new AssertionError();
+        mResource = blankResource;
     }
 
     private void redraw() {
         setImageResource(mResource);
     }
 
-    public void setCircleResource(int circle, int colorCircle) {
-        circleRes = circle;
-        circleTint = colorCircle;
-    }
-
-    public void setCrossResource(int cross, int colorCross) {
-        crossRes = cross;
-        crossTint = colorCross;
+    public void setBlankResource(int blankResource) {
+        this.blankResource = blankResource;
     }
 }

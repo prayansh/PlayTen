@@ -16,6 +16,8 @@
 
 package com.game.prayansh.ultimatetictactoe.activities;
 
+import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -40,8 +42,6 @@ import butterknife.OnClick;
 public class MainActivity extends AppCompatActivity {
     @BindView(R.id.bg)
     View background;
-    @BindView(R.id.tvTitle)
-    TextView tvTitle;
     @BindView(R.id.ivCross)
     ImageView ivCross;
     @BindView(R.id.ivCircle)
@@ -58,26 +58,30 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         setupTheme();
         //TODO Add Recurring Animation for spinning Cross Icon
+//        http://stackoverflow.com/questions/1634252/how-to-make-a-smooth-image-rotation-in-android
     }
 
     private void setupTheme() {
-        Theme mTheme = ThemeManager.getPrimary(getApplicationContext());
-
+        Theme mTheme = ThemeManager.getTheme();
+        Typeface typeFace = Typeface.createFromAsset(getAssets(), "fonts/Raleway-Regular.ttf");
         // Setting up views
         background.setBackgroundResource(mTheme.getBackground());
-        tvTitle.setTextColor(mTheme.getTextColor());
         ivCross.setImageResource(mTheme.getCross());
         ivCross.setColorFilter(mTheme.getColorCross());
         ivCircle.setImageResource(mTheme.getCircle());
         ivCircle.setColorFilter(mTheme.getColorCircle());
         newGame.setTextColor(mTheme.getColor());
+        newGame.setTypeface(typeFace);
         settings.setTextColor(mTheme.getColor());
+        settings.setTypeface(typeFace);
     }
 
     @OnClick(R.id.bPlay)
     public void newGame() {
         GameUI.getInstance().newGame();
         //TODO Create Intent for GameActivity
+        Intent newGameIntent = new Intent(this, GameActivity.class);
+        startActivity(newGameIntent);
     }
 
     @OnClick(R.id.bSettings)

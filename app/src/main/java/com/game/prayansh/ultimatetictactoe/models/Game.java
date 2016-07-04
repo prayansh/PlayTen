@@ -19,7 +19,6 @@ package com.game.prayansh.ultimatetictactoe.models;
 
 import android.os.Bundle;
 
-import com.game.prayansh.ultimatetictactoe.GameActivity;
 import com.game.prayansh.ultimatetictactoe.exceptions.GameOverException;
 import com.game.prayansh.ultimatetictactoe.exceptions.InvalidMoveException;
 
@@ -75,12 +74,12 @@ public class Game {
         return moves.getContextIndex();
     }
 
-    public void setContextBoard(int index) {
+    public void setContextBoardIndex(int index) {
         moves.setContextIndex(index);
     }
 
     public CellVal getPlayer() {
-        return (moves.top() % 2 == 0) ? CellVal.X : CellVal.O;
+        return (moves.top() % 2 == 0) ? CellVal.O : CellVal.X;
     }
 
     /**
@@ -91,26 +90,27 @@ public class Game {
      * @see - check for contextboard = -1 before calling
      */
     public Move playMove(int position) throws InvalidMoveException, GameOverException {
+        CellVal player = getPlayer();
         if (getContextBoardIndex() == -1)
             throw new IllegalStateException("No Context Board");
-        boolean valid = getContextGameBoard().setCellAt(position, getPlayer());
+        boolean valid = getContextGameBoard().setCellAt(position, player);
         Move m = new Move(getContextBoardIndex(), position, moves.getFlag());
         if (!valid || !moves.push(m)) {
-            throw new InvalidMoveException("Invalid Move for Player " + getPlayer().name() + ":" + position);
+            throw new InvalidMoveException("Invalid Move for Player " + player.name() + ":" + position);
         }
         //Move has been added at this point
         if (getContextGameBoard().solved()) {
             CellVal winner = getContextGameBoard().winner();
             equivalentBoard.setCellAt(getContextBoardIndex(), winner);
-            moves.setContextIndex(-1);
+            setContextBoardIndex(-1);
         }
-        if (checkWinner())
-            throw new GameOverException("Player " + getPlayer().name() + " has won", getPlayer());
+        if (checkWinner(player))
+            throw new GameOverException("Player " + player.name() + " has won", player);
         return m;
     }
 
-    public boolean checkWinner() {
-        return (equivalentBoard.solved() && equivalentBoard.winner() == getPlayer());
+    public boolean checkWinner(CellVal player) {
+        return (equivalentBoard.solved() && equivalentBoard.winner() == player);
     }
 
     private void updateEquivalentBoard() {
@@ -132,12 +132,13 @@ public class Game {
 
     public Bundle toBundle() {
         Bundle thisInstance = new Bundle();
-        thisInstance.putParcelable(GameActivity.STATE_BOARDS, moves);
+//        thisInstance.putParcelable(GameActivity.STATE_BOARDS, moves);
         return thisInstance;
     }
 
     public Move undo() {
         Move m = moves.pop();
+        setContextBoardIndex(moves.peek().getCellNo());
         getBoards()[m.getBoardNo()].clearCellAt(m.getCellNo());
         return m;
     }

@@ -41,19 +41,13 @@
         android:layout_toEndOf="@+id/board"
         android:gravity="center">
 
-        <TextView
-            android:id="@+id/tvInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dip"
-            android:allowUndo="false"
-            android:padding="20dip"
-            android:text="@string/player_turn"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/white"
-            android:textSize="32sp" />
+        <ImageView
+            android:layout_width="75dip"
+            android:layout_height="75dip"
+            android:id="@+id/ivInfo"
+            android:src="@drawable/circle_minimal"
+            android:padding="20dip" />
+
 
         <Button
             android:layout_width="150dip"

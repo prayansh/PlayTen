@@ -73,5 +73,10 @@ public class Move implements Parcelable {
         dest.writeInt(cellNo);
         dest.writeByte((byte) (freeHit ? 1 : 0));
     }
+
+    @Override
+    public String toString() {
+        return boardNo + "," + cellNo + ":" + freeHit;
+    }
 }
 

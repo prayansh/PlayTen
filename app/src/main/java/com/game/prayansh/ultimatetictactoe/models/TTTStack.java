@@ -67,7 +67,7 @@ public class TTTStack implements Iterable<Move>, Parcelable {
             data[++top] = m;
             contextIndex = m.getCellNo();
         } else return false;
-        return robust();
+        return true;
     }
 
     public Move pop() {
@@ -87,7 +87,7 @@ public class TTTStack implements Iterable<Move>, Parcelable {
             return true;
         boolean flag = true;
         for (int i = 0; i < top - 1; i++) {
-            if (data[i + 1].getBoardNo() != data[i].getCellNo())
+            if (data[i + 1].getBoardNo() != data[i].getCellNo() || data[i+1].isFreeHit())
                 flag = false;
         }
         return flag;
