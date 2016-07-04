@@ -40,18 +40,18 @@ public class BoardView extends ViewGroup {
     private static final String TAG = "BoardViewLog";
 
     private static final int DEFAULT_COL_COUNT = 3;
+    private static final int MARGIN = 20;
+    private static final int PADDING = 30;
 
     private Paint mGridPaint;
-
     private int type;
     private int childSize;
     private int mColumnCount;
     private int mMaxChildren;
     private int winner;
     private LayoutParams layoutParamsChild;
-    private boolean highlight;
 
-    private final int PADDING = 20;
+    private boolean highlight;
 
     public BoardView(Context context) {
         this(context, null);
@@ -97,7 +97,7 @@ public class BoardView extends ViewGroup {
         //Measure all child views
         childSize = majorDimension / mColumnCount;
         int blockSpec = MeasureSpec.makeMeasureSpec(childSize, MeasureSpec.EXACTLY);
-        measureChildren(blockSpec, blockSpec);
+        measureChildren(blockSpec - MARGIN, blockSpec - MARGIN);
 
         //MUST call this to save our own dimensions
         setMeasuredDimension(majorDimension, majorDimension);
@@ -115,9 +115,9 @@ public class BoardView extends ViewGroup {
             col = i % mColumnCount;
             View child = getChildAt(i);
             child.setLayoutParams(layoutParamsChild);
-            child.setPadding(PADDING, PADDING, PADDING, PADDING);
-            left = (col * child.getMeasuredWidth());
-            top = (row * child.getMeasuredHeight());
+
+            left = (col * child.getMeasuredWidth()) + MARGIN / 2;
+            top = (row * child.getMeasuredHeight()) + MARGIN / 2;
 
             child.layout(left, top, left + child.getMeasuredWidth(), top + child.getMeasuredHeight());
         }
@@ -125,17 +125,6 @@ public class BoardView extends ViewGroup {
 
     @Override
     protected void dispatchDraw(Canvas canvas) {
-        //Let the framework do its thing
-//        super.dispatchDraw(canvas);
-        //TODO Simplify
-        if (winner == 0) {
-            super.dispatchDraw(canvas);
-            canvas.drawLine((1 * childSize), (0 * childSize), (1 * childSize), (3 * childSize), mGridPaint);
-            canvas.drawLine((2 * childSize), (0 * childSize), (2 * childSize), (3 * childSize), mGridPaint);
-            canvas.drawLine((0 * childSize), (1 * childSize), (3 * childSize), (1 * childSize), mGridPaint);
-            canvas.drawLine((0 * childSize), (2 * childSize), (3 * childSize), (2 * childSize), mGridPaint);
-        }
-        //fixme MAKE BETER
         if (winner == 1) {
             Drawable d = getResources().getDrawable(ThemeManager.getCross());
             if (d != null) {
@@ -150,8 +139,17 @@ public class BoardView extends ViewGroup {
             }
         }
         if (highlight)
-            canvas.drawColor(Color.argb(122, 255, 255, 255));
+            canvas.drawColor(Color.argb(200, 180, 180, 180));
+//            setAlpha(0.75f);
 
+        //TODO Simplify
+        if (winner == 0) {
+            super.dispatchDraw(canvas);
+            canvas.drawLine((1 * childSize), (0 * childSize), (1 * childSize), (3 * childSize), mGridPaint);
+            canvas.drawLine((2 * childSize), (0 * childSize), (2 * childSize), (3 * childSize), mGridPaint);
+            canvas.drawLine((0 * childSize), (1 * childSize), (3 * childSize), (1 * childSize), mGridPaint);
+            canvas.drawLine((0 * childSize), (2 * childSize), (3 * childSize), (2 * childSize), mGridPaint);
+        }
     }
 
     public void addAllViews(List<View> children) {
@@ -237,5 +235,9 @@ public class BoardView extends ViewGroup {
 
     public void setHighlight(boolean highlight) {
         this.highlight = highlight;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }

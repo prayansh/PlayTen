@@ -130,12 +130,6 @@ public class Game {
         return equivalentBoard;
     }
 
-    public Bundle toBundle() {
-        Bundle thisInstance = new Bundle();
-//        thisInstance.putParcelable(GameActivity.STATE_BOARDS, moves);
-        return thisInstance;
-    }
-
     public Move undo() {
         Move m = moves.pop();
         if (isStarted()) {

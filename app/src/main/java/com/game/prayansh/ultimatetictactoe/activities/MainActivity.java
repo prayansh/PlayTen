@@ -19,9 +19,11 @@ package com.game.prayansh.ultimatetictactoe.activities;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -57,8 +59,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.main_activity);
         ButterKnife.bind(this);
         setupTheme();
-        //TODO Add Recurring Animation for spinning Cross Icon
-//        http://stackoverflow.com/questions/1634252/how-to-make-a-smooth-image-rotation-in-android
+
     }
 
     private void setupTheme() {

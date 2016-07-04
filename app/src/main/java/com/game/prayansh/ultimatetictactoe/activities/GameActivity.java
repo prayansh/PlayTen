@@ -16,9 +16,11 @@
 
 package com.game.prayansh.ultimatetictactoe.activities;
 
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,6 +62,7 @@ public class GameActivity extends AppCompatActivity {
     Button restart;
     @BindView(R.id.bUndo)
     Button undo;
+
     private View.OnClickListener cellTouchListener;
 
     @Override
@@ -87,9 +90,13 @@ public class GameActivity extends AppCompatActivity {
         undo.setTypeface(typeFace);
 
         // Setup Board
+        gameBoard.setType(0);
+        gameBoard.setBorderPaint(theme.getGridColor());
+        gameBoard.setBorderSize(10);
         for (int i = 0; i < gameBoard.getMaxChildren(); i++) {
             BoardView bv = new BoardView(getApplicationContext());
             bv.setBorderPaint(theme.getGridColor());
+            bv.setType(1);
             gameBoard.addView(buildEmptyBoard(bv, i, theme));
         }
         updatePlayerInfo();
@@ -115,6 +122,7 @@ public class GameActivity extends AppCompatActivity {
                 currentPlayer.setImageResource(ThemeManager.getCircle());
                 break;
         }
+
     }
 
     private void clickView(View v) {
@@ -165,20 +173,23 @@ public class GameActivity extends AppCompatActivity {
 
     @OnClick(R.id.bUndo)
     public void undoMove() {
-        Move m = GameUI.getInstance().getGame().undo();
-        int block = m.getBoardNo(), cell = m.getCellNo();
-        ((CellView) ((BoardView) gameBoard.getChildAt(block)).getChildAt(cell)).mark(CellVal.B);
-        highlightContextBoards();
-        checkWins();
+        if (GameUI.getInstance().getGame().isStarted()) {
+            Move m = GameUI.getInstance().getGame().undo();
+            int block = m.getBoardNo(), cell = m.getCellNo();
+            ((CellView) ((BoardView) gameBoard.getChildAt(block)).getChildAt(cell)).mark(CellVal.B);
+            highlightContextBoards();
+            checkWins();
+            updatePlayerInfo();
+        }
     }
 
     @OnClick(R.id.bRestart)
     public void restart() {
+        GameUI.getInstance().newGame();
         for (int i = 0; i < gameBoard.getMaxChildren(); i++) {
             ((ViewGroup) gameBoard.getChildAt(i)).removeAllViews();
         }
         gameBoard.removeAllViews();
-        GameUI.getInstance().newGame();
         setupThemeAndViews();
     }
 

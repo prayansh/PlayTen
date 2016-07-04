@@ -46,10 +46,10 @@ public class CellView extends ImageView {
 
     public CellView(final Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        setScaleType(ScaleType.CENTER_CROP);
+        setScaleType(ScaleType.FIT_CENTER);
         cell = block = -1;
-//        int padding = context.getResources().getDimensionPixelSize(R.dimen.cell_margin);
-//        setPadding(padding, padding, padding, padding);
+        int padding = 10;
+        setPadding(padding, padding, padding, padding);
     }
 
     public void setBlock(int block) {
