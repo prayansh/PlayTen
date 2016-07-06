@@ -139,7 +139,7 @@ public class BoardView extends ViewGroup {
             }
         }
         if (highlight)
-            canvas.drawColor(Color.argb(200, 180, 180, 180));
+            canvas.drawColor(Color.argb(150, 75, 75, 75));
 //            setAlpha(0.75f);
 
         //TODO Simplify

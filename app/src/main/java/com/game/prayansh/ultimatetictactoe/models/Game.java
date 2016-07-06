@@ -88,7 +88,7 @@ public class Game {
      * contextboard = -1 if free hit
      *
      * @see - check for contextboard = -1 before calling
-     */
+     */ //FIXME clean and make better code
     public Move playMove(int position) throws InvalidMoveException, GameOverException {
         CellVal player = getPlayer();
         if (getContextBoardIndex() == -1)
@@ -98,10 +98,11 @@ public class Game {
         if (!valid || !moves.push(m)) {
             throw new InvalidMoveException("Invalid Move for Player " + player.name() + ":" + position);
         }
+        updateEquivalentBoard();
         //Move has been added at this point
         if (getContextGameBoard().solved()) {
-            CellVal winner = getContextGameBoard().winner();
-            equivalentBoard.setCellAt(getContextBoardIndex(), winner);
+//            CellVal winner = getContextGameBoard().winner();
+//            equivalentBoard.setCellAt(getContextBoardIndex(), winner);
             setContextBoardIndex(-1);
         }
         if (checkWinner(player))

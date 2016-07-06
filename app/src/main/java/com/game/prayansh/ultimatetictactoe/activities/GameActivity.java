@@ -16,18 +16,24 @@
 
 package com.game.prayansh.ultimatetictactoe.activities;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.game.prayansh.ultimatetictactoe.R;
 import com.game.prayansh.ultimatetictactoe.exceptions.GameOverException;
 import com.game.prayansh.ultimatetictactoe.exceptions.InvalidMoveException;
@@ -142,20 +148,37 @@ public class GameActivity extends AppCompatActivity {
             return;
         }
 
+        CellVal player = game.getPlayer();
         try {
-            CellVal player = game.getPlayer();
             Move m = game.playMove(cv.getCell());
             cv.mark(player);
-            checkWins();
-            updatePlayerInfo();
-            highlightContextBoards();
         } catch (InvalidMoveException | IllegalStateException e) {
             //TODO Show Message for Invalid Move
             Toast.makeText(getApplicationContext(), "You can't play there", Toast.LENGTH_SHORT).show();
         } catch (GameOverException e) {
             //TODO Show Message for Game Over
-            Toast.makeText(getApplicationContext(), "Game Over", Toast.LENGTH_SHORT).show();
+            cv.mark(player);
+            new MaterialDialog.Builder(this)
+                    .title(R.string.game_over)
+                    .customView(R.layout.game_over_dialog, false)
+                    .cancelable(false)
+                    .positiveText(R.string.win_dialog_button_text)
+                    .positiveColorRes(R.color.mt_black)
+                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            Intent newGameIntent = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(newGameIntent);
+                            finish();
+                        }
+                    })
+                    .show();
+        } finally {
+            checkWins();
+            updatePlayerInfo();
+            highlightContextBoards();
         }
+
     }
 
     private void checkWins() {

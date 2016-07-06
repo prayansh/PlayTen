@@ -33,7 +33,7 @@ public class ThemeManager {
     public static void setMarvel(Context context) {
         int seed = (int) (Math.random() * 10);
         theme = new Theme(0,
-                R.drawable.black_background,
+                R.drawable.minimal_background,
                 (seed > 5) ? R.drawable.cap : R.drawable.iron_man,
                 (seed <= 5) ? R.drawable.cap : R.drawable.iron_man,
                 ContextCompat.getColor(context, R.color.mt_black),

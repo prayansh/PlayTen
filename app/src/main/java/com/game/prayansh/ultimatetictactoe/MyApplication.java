@@ -40,7 +40,7 @@ public class MyApplication extends Application {
 
     private void initTheme() {
         //Handle theme changes with sharepreferences
-        ThemeManager.setMarvel(getApplicationContext());
+        ThemeManager.setMinimal(getApplicationContext());
     }
 
     protected void initSingletons() {
