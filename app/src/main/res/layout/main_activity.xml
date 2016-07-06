@@ -15,12 +15,12 @@
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bg"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
     android:background="@drawable/grad_blue"
-    android:id="@+id/bg">
+    android:gravity="center"
+    android:orientation="vertical">
 
     <requestFocus
         android:layout_alignParentBottom="true"
@@ -28,56 +28,54 @@
         android:layout_alignParentStart="true" />
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:gravity="center"
-        android:layout_centerHorizontal="true">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/tvTitle"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
             android:orientation="horizontal"
             android:paddingLeft="24dip"
-            android:paddingRight="24dip"
-            android:gravity="center"
-            android:layout_below="@+id/tvTitle"
-            android:layout_centerHorizontal="true">
+            android:paddingRight="24dip">
 
             <ImageView
                 android:id="@+id/ivCross"
                 android:layout_width="120dip"
                 android:layout_height="120dip"
                 android:padding="10dip"
-                android:src="@drawable/cross"
-                android:tint="@color/white" />
+                android:src="@drawable/cross" />
 
             <ImageView
                 android:id="@+id/ivCircle"
                 android:layout_width="120dip"
                 android:layout_height="120dip"
                 android:padding="10dip"
-                android:src="@drawable/circle"
-                android:tint="@color/white" />
+                android:src="@drawable/circle" />
         </LinearLayout>
 
         <Button
+            android:id="@+id/bPlay"
             android:layout_width="150dip"
             android:layout_height="wrap_content"
-            android:text="PLAY"
-            android:id="@+id/bPlay"
+            android:layout_margin="20dip"
             android:background="@drawable/btn_bg"
             android:padding="15dip"
-            android:layout_margin="20dip"
+            android:text="PLAY"
             android:textColor="@color/colorPrimary" />
 
         <Button
+            android:id="@+id/bSettings"
             android:layout_width="150dip"
             android:layout_height="wrap_content"
-            android:text="SETTINGS"
-            android:id="@+id/bSettings"
             android:background="@drawable/btn_bg"
             android:padding="15dip"
+            android:text="SETTINGS"
             android:textColor="@color/colorPrimary" />
     </LinearLayout>
 

@@ -25,18 +25,27 @@ import com.game.prayansh.ultimatetictactoe.R;
 /**
  * Created by Prayansh on 16-07-02.
  */
+
+//TODO Remove circleColor and crossColor
 public class ThemeManager {
     private static Theme theme;
 
-    public static void setPrimary(Context context) {
-
+    public static void setMarvel(Context context) {
+        int seed = (int) (Math.random() * 10);
+        theme = new Theme(0,
+                R.drawable.black_background,
+                (seed > 5) ? R.drawable.cap : R.drawable.iron_man,
+                (seed <= 5) ? R.drawable.cap : R.drawable.iron_man,
+                ContextCompat.getColor(context, R.color.mt_black),
+                R.drawable.blank_minimal, //TODO try avenger icon
+                Color.rgb(255, 255, 255));
     }
 
     public static void setMinimal(Context context) {
         theme = new Theme(0,
                 R.drawable.minimal_background,
-                R.drawable.cross_minimal, 0,
-                R.drawable.circle_minimal, 0,
+                R.drawable.cross_minimal,
+                R.drawable.circle_minimal,
                 ContextCompat.getColor(context, R.color.mt_black),
                 R.drawable.blank_minimal,
                 Color.rgb(255, 255, 255));
@@ -46,8 +55,8 @@ public class ThemeManager {
         int white = Color.rgb(255, 255, 255);
         theme = new Theme(white,
                 R.drawable.grad_blue,
-                R.drawable.cross, white,
-                R.drawable.circle, white,
+                R.drawable.cross,
+                R.drawable.circle,
                 ContextCompat.getColor(context, R.color.belize_hole),
                 0,
                 white);

@@ -68,9 +68,7 @@ public class MainActivity extends AppCompatActivity {
         // Setting up views
         background.setBackgroundResource(mTheme.getBackground());
         ivCross.setImageResource(mTheme.getCross());
-        ivCross.setColorFilter(mTheme.getColorCross());
         ivCircle.setImageResource(mTheme.getCircle());
-        ivCircle.setColorFilter(mTheme.getColorCircle());
         newGame.setTextColor(mTheme.getColor());
         newGame.setTypeface(typeFace);
         settings.setTextColor(mTheme.getColor());
