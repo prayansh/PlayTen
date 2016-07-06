@@ -158,9 +158,13 @@ public class GameActivity extends AppCompatActivity {
         } catch (GameOverException e) {
             //TODO Show Message for Game Over
             cv.mark(player);
+            LayoutInflater inflater = this.getLayoutInflater();
+            View dialogView = inflater.inflate(R.layout.game_over_dialog, null);
+            int res = (e.getWinner() == CellVal.O) ? ThemeManager.getCircle() : ThemeManager.getCross();
+            ((ImageView) dialogView.findViewById(R.id.winner)).setImageResource(res);
             new MaterialDialog.Builder(this)
-                    .title(R.string.game_over)
-                    .customView(R.layout.game_over_dialog, false)
+//                    .title(R.string.game_over)
+                    .customView(dialogView, false)
                     .cancelable(false)
                     .positiveText(R.string.win_dialog_button_text)
                     .positiveColorRes(R.color.mt_black)
@@ -171,8 +175,7 @@ public class GameActivity extends AppCompatActivity {
                             startActivity(newGameIntent);
                             finish();
                         }
-                    })
-                    .show();
+                    }).show();
         } finally {
             checkWins();
             updatePlayerInfo();
