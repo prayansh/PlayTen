@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2016 Prayansh Srivastava
   ~
   ~    Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,8 +14,11 @@
   ~    limitations under the License.
   -->
 
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@color/belize_hole" android:state_selected="true" />
-    <item android:drawable="@color/belize_hole" android:state_pressed="true" />
-    <item android:drawable="@color/peter_river" />
-</selector>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <gradient
+        android:angle="270"
+        android:endColor="#FFF09819"
+        android:startColor="#FFFF512F"
+        android:type="linear" />
+</shape>

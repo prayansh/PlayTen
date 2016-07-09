@@ -13,8 +13,7 @@
   ~    See the License for the specific language governing permissions and
   ~    limitations under the License.
   -->
-
-<resources>
-    <dimen name="img_size">120dip</dimen>
-    <dimen name="img_padding">10dip</dimen>
-</resources>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/mt_black" />
+</shape>

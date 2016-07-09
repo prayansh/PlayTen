@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.game.prayansh.ultimatetictactoe">
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <application
         android:name=".MyApplication"
@@ -10,8 +11,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".GameActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:name=".activities.MainActivity"
+            android:configChanges="keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:theme="@style/FullscreenTheme">
             <intent-filter>
@@ -21,8 +22,17 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".BoardFragment"
-            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:name=".activities.GameActivity"
+            android:configChanges="keyboardHidden|screenSize"
+            android:label="@string/app_name"
+            android:theme="@style/FullscreenTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:configChanges="keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:theme="@style/FullscreenTheme">
             <intent-filter>

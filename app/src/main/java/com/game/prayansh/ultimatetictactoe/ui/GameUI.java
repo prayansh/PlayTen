@@ -20,15 +20,14 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import com.game.prayansh.ultimatetictactoe.models.Game;
+import com.game.prayansh.ultimatetictactoe.models.TTTStack;
 
 /**
  * Created by Prayansh on 16-05-12.
  */
 public class GameUI {
-    private static final String BITMAPS = "bitmaps";
     private static final String GAME = "game";
     private Game mGame;
-    private Bitmap[] gameBoards; // stores bitmaps of each small board
     private static GameUI gameUI;
 
     /**
@@ -39,13 +38,12 @@ public class GameUI {
         newGame();
     }
 
-    private GameUI(Game game, Bitmap[] bitmaps) {
-        mGame = game;
-        gameBoards = bitmaps;
+    private GameUI(TTTStack stack) {
+        mGame = new Game(stack);
     }
 
-    public static void recreate(Game game, Bitmap[] bitmaps) {
-        gameUI = new GameUI(game, bitmaps);
+    public static void recreate(TTTStack stack) {
+        gameUI = new GameUI(stack);
     }
 
     /**
@@ -61,25 +59,11 @@ public class GameUI {
         return gameUI;
     }
 
-
-    public void setGameBoards(Bitmap[] gameBoards) {
-        this.gameBoards = gameBoards;
-    }
-
-    public void replaceBoard(int index, Bitmap bm) {
-        gameBoards[index] = bm;
-    }
-
     public void newGame() {
         mGame = new Game();
-        gameBoards = new Bitmap[9];
     }
 
     public Game getGame() {
         return mGame;
-    }
-
-    public Bitmap[] getGameBoards() {
-        return gameBoards;
     }
 }

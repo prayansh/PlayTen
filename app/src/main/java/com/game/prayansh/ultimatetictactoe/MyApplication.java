@@ -19,6 +19,7 @@ package com.game.prayansh.ultimatetictactoe;
 import android.app.Application;
 
 import com.game.prayansh.ultimatetictactoe.ui.GameUI;
+import com.game.prayansh.ultimatetictactoe.ui.ThemeManager;
 
 /**
  * Created by Prayansh on 16-05-13.
@@ -34,6 +35,12 @@ public class MyApplication extends Application {
         // Initialize the singletons so their instances
         // are bound to the application process.
         initSingletons();
+        initTheme();
+    }
+
+    private void initTheme() {
+        //Handle theme changes with sharepreferences
+        ThemeManager.setMarvel(getApplicationContext());
     }
 
     protected void initSingletons() {

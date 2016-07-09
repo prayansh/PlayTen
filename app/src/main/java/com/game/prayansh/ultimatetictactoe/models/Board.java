@@ -72,6 +72,20 @@ public class Board implements Iterable<Cell>, Parcelable {
         return true;
     }
 
+    /**
+     * Called to undo a move
+     * Subtracts score and replaces value with blank cell
+     * @param index
+     */
+    public void clearCellAt(int index) {
+        CellVal prevPlayer = cellAt(index).getVal();
+        cells[index].setVal(CellVal.B);
+        score[index / 3] -= prevPlayer.getVal();
+        score[3 + index % 3] -= prevPlayer.getVal();
+        if ((index / 3) == (index % 3)) score[2 * 3] -= prevPlayer.getVal();
+        if (3 - 1 - (index % 3) == (index / 3)) score[2 * 3 + 1] -= prevPlayer.getVal();
+    }
+
     public boolean setCellAt(int row, int column, CellVal player) {
         return setCellAt(row * 3 + column, player);
     }

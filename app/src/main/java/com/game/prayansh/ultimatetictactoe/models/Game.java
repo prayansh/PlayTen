@@ -19,111 +19,133 @@ package com.game.prayansh.ultimatetictactoe.models;
 
 import android.os.Bundle;
 
-import com.game.prayansh.ultimatetictactoe.GameActivity;
 import com.game.prayansh.ultimatetictactoe.exceptions.GameOverException;
 import com.game.prayansh.ultimatetictactoe.exceptions.InvalidMoveException;
 
 public class Game {
-    private CellVal player;
-    private Board[] boards;
-    private Board equivalent; // The board equivalent of the game_board
-    private int contextBoard;
+    private Board[] gameBoards;
+    private Board equivalentBoard;
+    private TTTStack moves;
 
     public Game() {
-        boards = new Board[9];
-        equivalent = new Board();
-        for (int i = 0; i < boards.length; i++) {
-            boards[i] = new Board();
-        }
-        contextBoard = -1;
-        player = CellVal.X;
+        initBoards();
+        moves = new TTTStack();
     }
 
-    public Game(Board[] boards, CellVal player) {
-        this.boards = boards;
-        this.player = player;
+    public Game(TTTStack stack) {
+        moves = stack;
+        updateGameBoard();
+    }
+
+    private void initBoards() {
+        gameBoards = new Board[9];
+        equivalentBoard = new Board();
+        for (int i = 0; i < gameBoards.length; i++) {
+            gameBoards[i] = new Board();
+        }
+    }
+
+    private void updateGameBoard() {
+        initBoards();
+        int i = 0;
+        for (Move m : moves) {
+            CellVal player = (i % 2 == 0) ? CellVal.X : CellVal.O;
+            gameBoards[m.getBoardNo()].setCellAt(m.getCellNo(), player);
+            i++;
+        }
         updateEquivalentBoard();
     }
 
-    public Board getInContextBoard() {
-        return boards[contextBoard];
-    }
-
-    public int getContextBoard() {
-        return contextBoard;
-    }
-
-    public CellVal getPlayer() {
-        return player;
+    /**
+     * Returns board index to play on
+     *
+     * @return -1 for free hit
+     */
+    public Board getContextGameBoard() {
+        return gameBoards[getContextBoardIndex()];
     }
 
     /**
-     * To be called for first move to decide starting context board
+     * Returns board index to play on
+     *
+     * @return -1 for free hit
      */
-    public void setContextBoard(int val) {
-        contextBoard = val;
+    public int getContextBoardIndex() {
+        return moves.getContextIndex();
+    }
+
+    public void setContextBoardIndex(int index) {
+        moves.setContextIndex(index);
+    }
+
+    public CellVal getPlayer() {
+        return (moves.top() % 2 == 0) ? CellVal.O : CellVal.X;
     }
 
     /**
      * Place the player at position in context board
      * update equivalent board
-     * produce the next context board, if valid move
      * contextboard = -1 if free hit
-     * togglePlayer
-     */
-    public int playMove(int position) throws InvalidMoveException, GameOverException {
-        boolean valid = getInContextBoard().setCellAt(position, player);
-        if (!valid) {
+     *
+     * @see - check for contextboard = -1 before calling
+     */ //FIXME clean and make better code
+    public Move playMove(int position) throws InvalidMoveException, GameOverException {
+        CellVal player = getPlayer();
+        if (getContextBoardIndex() == -1)
+            throw new IllegalStateException("No Context Board");
+        boolean valid = getContextGameBoard().setCellAt(position, player);
+        Move m = new Move(getContextBoardIndex(), position, moves.getFlag());
+        if (!valid || !moves.push(m)) {
             throw new InvalidMoveException("Invalid Move for Player " + player.name() + ":" + position);
         }
         updateEquivalentBoard();
-        contextBoard = position;
-        if (getInContextBoard().solved()) {
-            int index = contextBoard;
-            contextBoard = -1;
+        //Move has been added at this point
+        if (getContextGameBoard().solved()) {
+//            CellVal winner = getContextGameBoard().winner();
+//            equivalentBoard.setCellAt(getContextBoardIndex(), winner);
+            setContextBoardIndex(-1);
         }
-        if (checkWinner())
+        if (checkWinner(player))
             throw new GameOverException("Player " + player.name() + " has won", player);
-        togglePlayer();
-        return contextBoard;
+        return m;
     }
 
-    private void togglePlayer() {
-        switch (player) {
-            case X:
-                player = CellVal.O;
-                break;
-            case O:
-                player = CellVal.X;
-                break;
-        }
-    }
-
-    public boolean checkWinner() {
-        return (equivalent.solved() && equivalent.winner() == player);
+    public boolean checkWinner(CellVal player) {
+        return (equivalentBoard.solved() && equivalentBoard.winner() == player);
     }
 
     private void updateEquivalentBoard() {
         for (int i = 0; i < 9; i++) {
-            if (boards[i].solved()) {
-                CellVal winner = boards[i].winner();
-                equivalent.setCellAt(i, winner);
+            if (gameBoards[i].solved()) {
+                CellVal winner = gameBoards[i].winner();
+                equivalentBoard.setCellAt(i, winner);
             }
         }
     }
 
     public Board[] getBoards() {
-        return boards;
+        return gameBoards;
     }
 
     public Board getEquivalent() {
-        return equivalent;
+        return equivalentBoard;
     }
 
-    public Bundle toBundle() {
-        Bundle thisInstance = new Bundle();
-        thisInstance.putSerializable(GameActivity.STATE_PLAYER, player);
-        thisInstance.putParcelableArray(GameActivity.STATE_BOARDS, boards);
-        return thisInstance;
+    public Move undo() {
+        Move m = moves.pop();
+        if (isStarted()) {
+            setContextBoardIndex(moves.peek().getCellNo());
+            getBoards()[m.getBoardNo()].clearCellAt(m.getCellNo());
+        }
+        return m;
+    }
+
+
+    public boolean isStarted() {
+        return moves.top() != -1;
+    }
+
+    public TTTStack getMoves() {
+        return moves;
     }
 }

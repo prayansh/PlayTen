@@ -8,4 +8,12 @@
     <string name="any_changes">any_changes</string>
     <string name="start">Click Play to start</string>
     <string name="reset">Are you sure you want to start a new game?</string>
+    <string name="win_dialog_text">Wins!</string>
+    <string name="win_dialog_button_text">Return to main menu</string>
+    <string name="game_over">Game Over</string>
+    <string name="theme_minimal">Minimal</string>
+    <string name="theme_classic">Classic</string>
+    <string name="theme_marvel">Marvel</string>
+    <string name="undo">Undo</string>
+    <string name="restart">Restart</string>
 </resources>
