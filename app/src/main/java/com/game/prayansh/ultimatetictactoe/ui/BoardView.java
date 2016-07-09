@@ -142,13 +142,12 @@ public class BoardView extends ViewGroup {
             canvas.drawColor(Color.argb(150, 75, 75, 75));
 //            setAlpha(0.75f);
 
-        //TODO Simplify
         if (winner == 0) {
             super.dispatchDraw(canvas);
-            canvas.drawLine((1 * childSize), (0 * childSize), (1 * childSize), (3 * childSize), mGridPaint);
-            canvas.drawLine((2 * childSize), (0 * childSize), (2 * childSize), (3 * childSize), mGridPaint);
-            canvas.drawLine((0 * childSize), (1 * childSize), (3 * childSize), (1 * childSize), mGridPaint);
-            canvas.drawLine((0 * childSize), (2 * childSize), (3 * childSize), (2 * childSize), mGridPaint);
+            canvas.drawLine((childSize), (0), (childSize), (3 * childSize), mGridPaint);
+            canvas.drawLine((2 * childSize), (0), (2 * childSize), (3 * childSize), mGridPaint);
+            canvas.drawLine((0), (childSize), (3 * childSize), (childSize), mGridPaint);
+            canvas.drawLine((0), (2 * childSize), (3 * childSize), (2 * childSize), mGridPaint);
         }
     }
 

@@ -25,8 +25,6 @@ import com.game.prayansh.ultimatetictactoe.R;
 /**
  * Created by Prayansh on 16-07-02.
  */
-
-//TODO Remove circleColor and crossColor
 public class ThemeManager {
     private static Theme theme;
 
@@ -37,7 +35,7 @@ public class ThemeManager {
                 (seed > 5) ? R.drawable.cap : R.drawable.iron_man,
                 (seed <= 5) ? R.drawable.cap : R.drawable.iron_man,
                 ContextCompat.getColor(context, R.color.mt_black),
-                R.drawable.blank_minimal, //TODO try avenger icon
+                R.drawable.blank_minimal,
                 Color.rgb(255, 255, 255));
     }
 

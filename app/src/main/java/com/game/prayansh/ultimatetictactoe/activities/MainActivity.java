@@ -78,14 +78,12 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.bPlay)
     public void newGame() {
         GameUI.getInstance().newGame();
-        //TODO Create Intent for GameActivity
         Intent newGameIntent = new Intent(this, GameActivity.class);
         startActivity(newGameIntent);
     }
 
     @OnClick(R.id.bSettings)
     public void openSettings() {
-        //TODO Create intent for SettingsActivity
         Intent settingsIntent = new Intent(this, SettingsActivity.class);
         startActivity(settingsIntent);
     }
