@@ -11,4 +11,7 @@
     <string name="win_dialog_text">Wins!</string>
     <string name="win_dialog_button_text">Return to main menu</string>
     <string name="game_over">Game Over</string>
+    <string name="theme_minimal">Minimal</string>
+    <string name="theme_classic">Classic</string>
+    <string name="theme_marvel">Marvel</string>
 </resources>

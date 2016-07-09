@@ -20,4 +20,5 @@
     <dimen name="bar_dimen">355dip</dimen>
     <dimen name="cell_margin">8dip</dimen>
     <dimen name="button">75dip</dimen>
+    <dimen name="img_size">120dip</dimen>
 </resources>

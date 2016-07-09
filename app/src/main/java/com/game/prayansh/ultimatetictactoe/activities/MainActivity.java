@@ -86,5 +86,7 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.bSettings)
     public void openSettings() {
         //TODO Create intent for SettingsActivity
+        Intent settingsIntent = new Intent(this, SettingsActivity.class);
+        startActivity(settingsIntent);
     }
 }
