@@ -16,14 +16,13 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bg"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/grad_blue"
-    android:orientation="vertical"
-    android:touchscreenBlocksFocus="false"
     android:gravity="center_vertical"
-    android:padding="10dip"
-    android:id="@+id/bg">
+    android:orientation="vertical"
+    android:padding="10dip">
 
     <com.game.prayansh.ultimatetictactoe.ui.BoardView
         android:id="@+id/board"
@@ -33,40 +32,38 @@
         custom:type="1" />
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/board"
         android:layout_toEndOf="@+id/board"
-        android:gravity="center">
+        android:layout_toRightOf="@+id/board"
+        android:gravity="center"
+        android:orientation="vertical">
 
         <ImageView
-            android:layout_width="100dip"
-            android:layout_height="100dip"
             android:id="@+id/ivInfo"
-            android:src="@drawable/circle_minimal"
-            android:padding="20dip" />
+            style="@style/player_display"
+            android:src="@drawable/circle_minimal" />
 
 
         <Button
+            android:id="@+id/bUndo"
             android:layout_width="150dip"
             android:layout_height="wrap_content"
-            android:text="UNDO"
-            android:id="@+id/bUndo"
+            android:layout_margin="20dip"
             android:background="@drawable/btn_bg"
             android:padding="15dip"
-            android:layout_margin="20dip"
+            android:text="@string/undo"
             android:textColor="@color/colorPrimary" />
 
         <Button
+            android:id="@+id/bRestart"
             android:layout_width="150dip"
             android:layout_height="wrap_content"
-            android:text="RESTART"
-            android:id="@+id/bRestart"
+            android:layout_margin="20dip"
             android:background="@drawable/btn_bg"
             android:padding="15dip"
-            android:layout_margin="20dip"
+            android:text="@string/restart"
             android:textColor="@color/colorPrimary" />
 
     </LinearLayout>

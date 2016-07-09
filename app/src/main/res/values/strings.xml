@@ -14,4 +14,6 @@
     <string name="theme_minimal">Minimal</string>
     <string name="theme_classic">Classic</string>
     <string name="theme_marvel">Marvel</string>
+    <string name="undo">Undo</string>
+    <string name="restart">Restart</string>
 </resources>

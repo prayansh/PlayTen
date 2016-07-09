@@ -22,22 +22,19 @@
     android:background="@drawable/grad_blue"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:padding="10dip"
-    android:touchscreenBlocksFocus="false">
+    android:padding="10dip">
 
     <LinearLayout
         android:id="@+id/infoView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="100dip"
-            android:layout_height="100dip"
             android:id="@+id/ivInfo"
-            android:src="@drawable/circle_minimal"
-            android:padding="20dip" />
+            style="@style/player_display"
+            android:src="@drawable/circle_minimal" />
 
     </LinearLayout>
 
@@ -65,7 +62,7 @@
             android:layout_margin="20dip"
             android:background="@drawable/btn_bg"
             android:padding="15dip"
-            android:text="UNDO"
+            android:text="@string/undo"
             android:textColor="@color/colorPrimary" />
 
         <Button
@@ -75,7 +72,7 @@
             android:layout_margin="20dip"
             android:background="@drawable/btn_bg"
             android:padding="15dip"
-            android:text="RESTART"
+            android:text="@string/restart"
             android:textColor="@color/colorPrimary" />
     </LinearLayout>
 

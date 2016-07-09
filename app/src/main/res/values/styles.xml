@@ -16,21 +16,14 @@
         <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
     </style>
 
-    <style name="cell">
-        <item name="android:layout_width">@dimen/cell</item>
-        <item name="android:layout_height">@dimen/cell</item>
-        <item name="android:padding">@dimen/cell_margin</item>
-        <item name="android:textSize">40sp</item>
-        <item name="android:textColor">@color/mt_black</item>
-        <item name="android:background">@color/white</item>
-        <item name="android:gravity">center</item>
+    <style name="player_display">
+        <item name="android:layout_width">@dimen/img_size</item>
+        <item name="android:layout_height">@dimen/img_size</item>
+        <item name="android:padding">@dimen/img_padding</item>
     </style>
 
-    <style name="cell_highlight">
-        <item name="android:layout_width">@dimen/cell</item>
-        <item name="android:layout_height">@dimen/cell</item>
-        <item name="android:background">@color/highlight</item>
-        <item name="android:visibility">gone</item>
+    <style name="btn">
+
     </style>
 
 

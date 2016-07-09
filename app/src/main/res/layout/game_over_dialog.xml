@@ -22,16 +22,20 @@
     android:orientation="vertical">
 
     <ImageView
-        android:layout_width="225dip"
-        android:layout_height="225dip"
-        android:padding="25dip"
-        android:src="@drawable/cross_minimal"
-        android:id="@+id/winner" />
+        android:id="@+id/winner"
+        style="@style/player_display"
+        android:src="@drawable/cross_minimal" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/win_dialog_text"
         android:textSize="24dip" />
+
+    <Button
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/win_dialog_button_text" />
 
 </LinearLayout>

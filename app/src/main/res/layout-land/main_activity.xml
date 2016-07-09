@@ -22,11 +22,6 @@
     android:gravity="center|center_horizontal"
     android:orientation="vertical">
 
-    <requestFocus
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -46,16 +41,12 @@
 
             <ImageView
                 android:id="@+id/ivCross"
-                android:layout_width="120dip"
-                android:layout_height="120dip"
-                android:padding="10dip"
+                style="@style/player_display"
                 android:src="@drawable/cross" />
 
             <ImageView
                 android:id="@+id/ivCircle"
-                android:layout_width="120dip"
-                android:layout_height="120dip"
-                android:padding="10dip"
+                style="@style/player_display"
                 android:src="@drawable/circle" />
         </LinearLayout>
 
