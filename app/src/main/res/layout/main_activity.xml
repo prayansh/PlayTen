@@ -58,7 +58,7 @@
             android:layout_margin="20dip"
             android:background="@drawable/btn_bg"
             android:padding="15dip"
-            android:text="PLAY"
+            android:text="@string/play"
             android:textColor="@color/colorPrimary" />
 
         <Button
@@ -68,7 +68,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/btn_bg"
             android:padding="15dip"
-            android:text="SETTINGS"
+            android:text="@string/settings"
             android:textColor="@color/colorPrimary" />
     </LinearLayout>
 

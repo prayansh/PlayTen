@@ -35,7 +35,9 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.game.prayansh.ultimatetictactoe.R;
+import com.game.prayansh.ultimatetictactoe.exceptions.BoardSolvedException;
 import com.game.prayansh.ultimatetictactoe.exceptions.GameOverException;
+import com.game.prayansh.ultimatetictactoe.exceptions.InvalidBlockException;
 import com.game.prayansh.ultimatetictactoe.exceptions.InvalidMoveException;
 import com.game.prayansh.ultimatetictactoe.models.Board;
 import com.game.prayansh.ultimatetictactoe.models.CellVal;
@@ -108,6 +110,20 @@ public class GameActivity extends AppCompatActivity {
         updatePlayerInfo();
     }
 
+    private BoardView buildEmptyBoard(BoardView bv, int block, Theme theme) {
+        for (int j = 0; j < gameBoard.getMaxChildren(); j++) {
+            CellView cv = new CellView(getApplicationContext());
+            cv.setBlock(block);
+            cv.setCell(j);
+            //Set up view resources
+            cv.setBlankResource(theme.getBlank());
+            cv.mark(CellVal.B);
+            cv.setOnClickListener(cellTouchListener);
+            bv.addView(cv);
+        }
+        return bv;
+    }
+
     private void highlightContextBoards() {
         Board[] boards = GameUI.getInstance().getGame().getBoards();
         int index = GameUI.getInstance().getGame().getContextBoardIndex();
@@ -117,71 +133,6 @@ public class GameActivity extends AppCompatActivity {
             else
                 ((BoardView) gameBoard.getChildAt(i)).setHighlight(false);
         }
-    }
-
-    private void updatePlayerInfo() {
-        switch (GameUI.getInstance().getGame().getPlayer()) {
-            case X:
-                currentPlayer.setImageResource(ThemeManager.getCross());
-                break;
-            case O:
-                currentPlayer.setImageResource(ThemeManager.getCircle());
-                break;
-        }
-
-    }
-
-    private void clickView(View v) {
-        CellView cv = (CellView) v;
-        Game game = GameUI.getInstance().getGame();
-        if (game.getContextBoardIndex() == -1)
-            game.setContextBoardIndex(cv.getBlock());
-        else if (game.getContextBoardIndex() != cv.getBlock()) {
-            //TODO Show Message for Invalid Move
-            Toast.makeText(getApplicationContext(),
-                    "You have to play on " + game.getContextBoardIndex() + " board", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (game.getContextGameBoard().solved()) {
-            game.setContextBoardIndex(-1);
-            Toast.makeText(getApplicationContext(), "You can't play on solved board", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        CellVal player = game.getPlayer();
-        try {
-            Move m = game.playMove(cv.getCell());
-            cv.mark(player);
-        } catch (InvalidMoveException | IllegalStateException e) {
-            //TODO Show Message for Invalid Move
-            Toast.makeText(getApplicationContext(), "You can't play there", Toast.LENGTH_SHORT).show();
-        } catch (GameOverException e) {
-            //TODO Show Message for Game Over
-            cv.mark(player);
-            LayoutInflater inflater = this.getLayoutInflater();
-            View dialogView = inflater.inflate(R.layout.game_over_dialog, null);
-            int res = (e.getWinner() == CellVal.O) ? ThemeManager.getCircle() : ThemeManager.getCross();
-            ((ImageView) dialogView.findViewById(R.id.winner)).setImageResource(res);
-            new MaterialDialog.Builder(this)
-//                    .title(R.string.game_over)
-                    .customView(dialogView, false)
-                    .cancelable(false)
-                    .positiveText(R.string.win_dialog_button_text)
-                    .positiveColorRes(R.color.mt_black)
-                    .onPositive(new MaterialDialog.SingleButtonCallback() {
-                        @Override
-                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                            Intent newGameIntent = new Intent(getApplicationContext(), MainActivity.class);
-                            startActivity(newGameIntent);
-                            finish();
-                        }
-                    }).show();
-        } finally {
-            checkWins();
-            updatePlayerInfo();
-            highlightContextBoards();
-        }
-
     }
 
     private void checkWins() {
@@ -197,40 +148,16 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
-    @OnClick(R.id.bUndo)
-    public void undoMove() {
-        if (GameUI.getInstance().getGame().isStarted()) {
-            Move m = GameUI.getInstance().getGame().undo();
-            int block = m.getBoardNo(), cell = m.getCellNo();
-            ((CellView) ((BoardView) gameBoard.getChildAt(block)).getChildAt(cell)).mark(CellVal.B);
-            highlightContextBoards();
-            checkWins();
-            updatePlayerInfo();
+    private void updatePlayerInfo() {
+        switch (GameUI.getInstance().getGame().getPlayer()) {
+            case X:
+                currentPlayer.setImageResource(ThemeManager.getCross());
+                break;
+            case O:
+                currentPlayer.setImageResource(ThemeManager.getCircle());
+                break;
         }
-    }
 
-    @OnClick(R.id.bRestart)
-    public void restart() {
-        GameUI.getInstance().newGame();
-        for (int i = 0; i < gameBoard.getMaxChildren(); i++) {
-            ((ViewGroup) gameBoard.getChildAt(i)).removeAllViews();
-        }
-        gameBoard.removeAllViews();
-        setupThemeAndViews();
-    }
-
-    private BoardView buildEmptyBoard(BoardView bv, int block, Theme theme) {
-        for (int j = 0; j < gameBoard.getMaxChildren(); j++) {
-            CellView cv = new CellView(getApplicationContext());
-            cv.setBlock(block);
-            cv.setCell(j);
-            //Set up view resources
-            cv.setBlankResource(theme.getBlank());
-            cv.mark(CellVal.B);
-            cv.setOnClickListener(cellTouchListener);
-            bv.addView(cv);
-        }
-        return bv;
     }
 
     @Override
@@ -262,5 +189,75 @@ public class GameActivity extends AppCompatActivity {
         highlightContextBoards();
         checkWins();
         updatePlayerInfo();
+    }
+
+    private void clickView(View v) {
+        CellView cv = (CellView) v;
+        Game game = GameUI.getInstance().getGame();
+        CellVal player = game.getPlayer();
+
+        //TODO create free hit message
+
+        try {
+            Move m = game.playMove(cv.getBlock(), cv.getCell());
+            cv.mark(player);
+        } catch (InvalidMoveException e) {
+            Toast.makeText(getApplicationContext(), "You can't play there", Toast.LENGTH_SHORT).show();
+        } catch (GameOverException e) {
+            cv.mark(player);
+            buildGameOverDialog(e.getWinner());
+        } catch (InvalidBlockException e) {
+            Toast.makeText(getApplicationContext(),
+                    "You have to play on " + e.getContextIndex() + " board", Toast.LENGTH_SHORT).show();
+        } catch (BoardSolvedException e) {
+            Toast.makeText(getApplicationContext(), "You can't play on solved board", Toast.LENGTH_SHORT).show();
+        } finally {
+            checkWins();
+            updatePlayerInfo();
+            highlightContextBoards();
+        }
+
+    }
+
+    @OnClick(R.id.bUndo)
+    public void undoMove() {
+        if (GameUI.getInstance().getGame().isStarted()) {
+            Move m = GameUI.getInstance().getGame().undo();
+            int block = m.getBoardNo(), cell = m.getCellNo();
+            ((CellView) ((BoardView) gameBoard.getChildAt(block)).getChildAt(cell)).mark(CellVal.B);
+            highlightContextBoards();
+            checkWins();
+            updatePlayerInfo();
+        }
+    }
+
+    @OnClick(R.id.bRestart)
+    public void restart() {
+        GameUI.getInstance().newGame();
+        for (int i = 0; i < gameBoard.getMaxChildren(); i++) {
+            ((ViewGroup) gameBoard.getChildAt(i)).removeAllViews();
+        }
+        gameBoard.removeAllViews();
+        setupThemeAndViews();
+    }
+
+    private void buildGameOverDialog(CellVal winner) {
+        int resourceId = (winner == CellVal.X) ? ThemeManager.getCross() : ThemeManager.getCircle();
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.game_over_dialog, null);
+        dialogBuilder.setView(dialogView);
+        //noinspection ResourceType
+        ((ImageView) dialogView.findViewById(R.id.winner)).setImageResource(resourceId);
+        (dialogView.findViewById(R.id.back)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent newGameIntent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(newGameIntent);
+                finish();
+            }
+        });
+        AlertDialog alertDialog = dialogBuilder.create();
+        alertDialog.show();
     }
 }

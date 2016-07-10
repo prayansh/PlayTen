@@ -16,4 +16,5 @@
     <string name="theme_marvel">Marvel</string>
     <string name="undo">Undo</string>
     <string name="restart">Restart</string>
+    <string name="play">PLAY</string>
 </resources>

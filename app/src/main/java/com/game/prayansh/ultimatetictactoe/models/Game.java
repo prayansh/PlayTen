@@ -17,9 +17,9 @@
 package com.game.prayansh.ultimatetictactoe.models;
 
 
-import android.os.Bundle;
-
+import com.game.prayansh.ultimatetictactoe.exceptions.BoardSolvedException;
 import com.game.prayansh.ultimatetictactoe.exceptions.GameOverException;
+import com.game.prayansh.ultimatetictactoe.exceptions.InvalidBlockException;
 import com.game.prayansh.ultimatetictactoe.exceptions.InvalidMoveException;
 
 public class Game {
@@ -89,22 +89,41 @@ public class Game {
      *
      * @see - check for contextboard = -1 before calling
      */ //FIXME clean and make better code
-    public Move playMove(int position) throws InvalidMoveException, GameOverException {
+    public Move playMove(int block, int cell) throws InvalidMoveException, GameOverException, InvalidBlockException, BoardSolvedException {
         CellVal player = getPlayer();
+        int contextIndex = getContextBoardIndex();
+
+        if (contextIndex == -1) {
+            setContextBoardIndex(block);
+        } else if (contextIndex != block) {
+            throw new InvalidBlockException("Found " + contextIndex + " but need to play at " + block, contextIndex, block);
+        }
+
+        if (getContextGameBoard().solved()) {
+            setContextBoardIndex(-1);
+            throw new BoardSolvedException("Board is solved", contextIndex);
+        }
+
+        //FIXME REDUNDANT CODE????
         if (getContextBoardIndex() == -1)
             throw new IllegalStateException("No Context Board");
-        boolean valid = getContextGameBoard().setCellAt(position, player);
-        Move m = new Move(getContextBoardIndex(), position, moves.getFlag());
+
+        contextIndex = getContextBoardIndex();
+
+        boolean valid = getContextGameBoard().setCellAt(cell, player);
+        Move m = new Move(getContextBoardIndex(), cell, moves.getFlag());
         if (!valid || !moves.push(m)) {
-            throw new InvalidMoveException("Invalid Move for Player " + player.name() + ":" + position);
+            throw new InvalidMoveException("Invalid Move for Player " + player.name() + ":" + cell);
         }
-        updateEquivalentBoard();
-        //Move has been added at this point
-        if (getContextGameBoard().solved()) {
-//            CellVal winner = getContextGameBoard().winner();
-//            equivalentBoard.setCellAt(getContextBoardIndex(), winner);
+
+        if (gameBoards[contextIndex].solved()) {
+            CellVal winner = gameBoards[contextIndex].winner();
+            equivalentBoard.setCellAt(contextIndex, winner);
+        }
+
+        if (getContextGameBoard().solved())
             setContextBoardIndex(-1);
-        }
+
         if (checkWinner(player))
             throw new GameOverException("Player " + player.name() + " has won", player);
         return m;
