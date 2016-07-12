@@ -17,12 +17,9 @@
 package com.game.prayansh.ultimatetictactoe.activities;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -32,8 +29,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.game.prayansh.ultimatetictactoe.R;
 import com.game.prayansh.ultimatetictactoe.exceptions.BoardSolvedException;
 import com.game.prayansh.ultimatetictactoe.exceptions.GameOverException;
@@ -96,15 +91,17 @@ public class GameActivity extends AppCompatActivity {
         restart.setTypeface(typeFace);
         undo.setTextColor(theme.getColor());
         undo.setTypeface(typeFace);
+        restart.setBackgroundResource(theme.getBtn());
+        undo.setBackgroundResource(theme.getBtn());
 
         // Setup Board
-        gameBoard.setType(0);
+        gameBoard.setType(1);
         gameBoard.setBorderPaint(theme.getGridColor());
         gameBoard.setBorderSize(10);
         for (int i = 0; i < gameBoard.getMaxChildren(); i++) {
             BoardView bv = new BoardView(getApplicationContext());
             bv.setBorderPaint(theme.getGridColor());
-            bv.setType(1);
+            bv.setType(0);
             gameBoard.addView(buildEmptyBoard(bv, i, theme));
         }
         updatePlayerInfo();
@@ -117,6 +114,7 @@ public class GameActivity extends AppCompatActivity {
             cv.setCell(j);
             //Set up view resources
             cv.setBlankResource(theme.getBlank());
+            cv.setHighlightResource(theme.getHighlight());
             cv.mark(CellVal.B);
             cv.setOnClickListener(cellTouchListener);
             bv.addView(cv);

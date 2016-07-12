@@ -73,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
         newGame.setTypeface(typeFace);
         settings.setTextColor(mTheme.getColor());
         settings.setTypeface(typeFace);
+        newGame.setBackgroundResource(mTheme.getBtn());
+        settings.setBackgroundResource(mTheme.getBtn());
     }
 
     @OnClick(R.id.bPlay)
@@ -86,5 +88,11 @@ public class MainActivity extends AppCompatActivity {
     public void openSettings() {
         Intent settingsIntent = new Intent(this, SettingsActivity.class);
         startActivity(settingsIntent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setupTheme();
     }
 }
