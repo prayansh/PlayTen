@@ -52,7 +52,7 @@ import butterknife.OnClick;
 /**
  * Created by Prayansh on 16-07-12.
  */
-public class GameActivity extends AppCompatActivity {
+public abstract class GameActivity extends AppCompatActivity {
 
     private static final String STATE_STACK = "stack_state";
     @BindView(R.id.bg)
@@ -73,6 +73,13 @@ public class GameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gameplay_activity);
         ButterKnife.bind(this);
+        cellTouchListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clickView(v);
+            }
+        };
+        setupThemeAndViews();
     }
 
     protected void setupThemeAndViews() {
@@ -187,9 +194,15 @@ public class GameActivity extends AppCompatActivity {
             Move m = GameUI.getInstance().getGame().undo();
             int block = m.getBoardNo(), cell = m.getCellNo();
             ((CellView) ((BoardView) gameBoard.getChildAt(block)).getChildAt(cell)).mark(CellVal.B);
+            if(m.isFreeHit())
+                GameUI.getInstance().getGame().setContextBoardIndex(-1);
+            else
+                GameUI.getInstance().getGame().setContextBoardIndex(block);
             highlightContextBoards();
             checkWins();
             updatePlayerInfo();
+        } else {
+            GameUI.getInstance().getGame().setContextBoardIndex(-1);
         }
     }
 
@@ -226,7 +239,8 @@ public class GameActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-
-
+        finish();
     }
+
+    protected abstract void clickView(View v);
 }

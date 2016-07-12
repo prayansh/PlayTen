@@ -57,16 +57,9 @@ public class MultiPlayerGameActivity extends GameActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        cellTouchListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                clickView(v);
-            }
-        };
-        setupThemeAndViews();
     }
 
-    private void clickView(View v) {
+    protected void clickView(View v) {
         CellView cv = (CellView) v;
         Game game = GameUI.getInstance().getGame();
         CellVal player = game.getPlayer();

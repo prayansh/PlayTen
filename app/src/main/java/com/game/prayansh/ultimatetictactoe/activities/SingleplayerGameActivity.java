@@ -22,6 +22,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Toast;
 
+import com.game.prayansh.ultimatetictactoe.R;
 import com.game.prayansh.ultimatetictactoe.exceptions.BoardSolvedException;
 import com.game.prayansh.ultimatetictactoe.exceptions.GameOverException;
 import com.game.prayansh.ultimatetictactoe.exceptions.InvalidBlockException;
@@ -35,6 +36,8 @@ import com.game.prayansh.ultimatetictactoe.ui.GameUI;
 
 import java.util.Random;
 
+import butterknife.OnClick;
+
 /**
  * Created by Prayansh on 16-07-12.
  */
@@ -42,20 +45,6 @@ public class SinglePlayerGameActivity extends GameActivity {
 
     private static final long AI_MOVE_DURATION = 2000;
     final Handler handler = new Handler();
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        cellTouchListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                userMove(v);
-                toggleInteractions(false);
-                handler.postDelayed(pcMove, AI_MOVE_DURATION);
-            }
-        };
-        setupThemeAndViews();
-    }
 
     private void toggleInteractions(boolean enable) {
         for (int i = 0; i < gameBoard.getMaxChildren(); i++) {
@@ -66,33 +55,6 @@ public class SinglePlayerGameActivity extends GameActivity {
         }
     }
 
-    private void userMove(View v) {
-        CellView cv = (CellView) v;
-        Game game = GameUI.getInstance().getGame();
-        CellVal player = game.getPlayer();
-
-        //TODO create free hit message
-
-        try {
-            Move m = game.playMove(cv.getBlock(), cv.getCell());
-            cv.mark(player);
-        } catch (InvalidMoveException e) {
-            Toast.makeText(getApplicationContext(), "You can't play there", Toast.LENGTH_SHORT).show();
-        } catch (GameOverException e) {
-            cv.mark(player);
-            buildGameOverDialog(e.getWinner());
-        } catch (InvalidBlockException e) {
-            Toast.makeText(getApplicationContext(),
-                    "You have to play on " + e.getContextIndex() + " board", Toast.LENGTH_SHORT).show();
-        } catch (BoardSolvedException e) {
-            Toast.makeText(getApplicationContext(), "You can't play on solved board", Toast.LENGTH_SHORT).show();
-        } finally {
-            checkWins();
-            updatePlayerInfo();
-            highlightContextBoards();
-        }
-    }
-
     Runnable pcMove = new Runnable() {
         @Override
         public void run() {
@@ -100,6 +62,42 @@ public class SinglePlayerGameActivity extends GameActivity {
             toggleInteractions(true);
         }
     };
+
+    protected void clickView(View v) {
+        CellView cv = (CellView) v;
+        Game game = GameUI.getInstance().getGame();
+        CellVal player = game.getPlayer();
+        boolean movePlayed = false;
+        //TODO create free hit message
+
+        try {
+            Move m = game.playMove(cv.getBlock(), cv.getCell());
+            cv.mark(player);
+            movePlayed = true;
+        } catch (InvalidMoveException e) {
+            Toast.makeText(getApplicationContext(), "You can't play there", Toast.LENGTH_SHORT).show();
+            movePlayed = false;
+        } catch (GameOverException e) {
+            cv.mark(player);
+            buildGameOverDialog(e.getWinner());
+            movePlayed = false;
+        } catch (InvalidBlockException e) {
+            movePlayed = false;
+            Toast.makeText(getApplicationContext(),
+                    "You have to play on " + e.getContextIndex() + " board", Toast.LENGTH_SHORT).show();
+        } catch (BoardSolvedException e) {
+            movePlayed = false;
+            Toast.makeText(getApplicationContext(), "You can't play on solved board", Toast.LENGTH_SHORT).show();
+        } finally {
+            checkWins();
+            updatePlayerInfo();
+            highlightContextBoards();
+        }
+        if (movePlayed) {
+            toggleInteractions(false);
+            handler.postDelayed(pcMove, AI_MOVE_DURATION);
+        }
+    }
 
     private void aiMove() {
         Game game = GameUI.getInstance().getGame();
@@ -127,5 +125,11 @@ public class SinglePlayerGameActivity extends GameActivity {
         checkWins();
         updatePlayerInfo();
         highlightContextBoards();
+    }
+
+    @OnClick(R.id.bUndo)
+    public void undoMove() {
+        super.undoMove();
+        super.undoMove();
     }
 }
