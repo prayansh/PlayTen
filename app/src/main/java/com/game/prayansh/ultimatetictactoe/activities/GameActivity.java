@@ -27,13 +27,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.game.prayansh.ultimatetictactoe.R;
-import com.game.prayansh.ultimatetictactoe.exceptions.BoardSolvedException;
-import com.game.prayansh.ultimatetictactoe.exceptions.GameOverException;
-import com.game.prayansh.ultimatetictactoe.exceptions.InvalidBlockException;
-import com.game.prayansh.ultimatetictactoe.exceptions.InvalidMoveException;
 import com.game.prayansh.ultimatetictactoe.models.Board;
 import com.game.prayansh.ultimatetictactoe.models.CellVal;
 import com.game.prayansh.ultimatetictactoe.models.Game;

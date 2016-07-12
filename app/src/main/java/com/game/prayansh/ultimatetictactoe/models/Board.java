@@ -37,10 +37,14 @@ public class Board implements Iterable<Cell>, Parcelable {
             cells[i] = new Cell();
     }
 
+    public Board(Board b) {
+        this(b.getCells());
+    }
+
     public Board(Cell[] cells) {
         this();
         for (int i = 0; i < cells.length; i++) {
-            setCellAt(i, cells[i].getVal());
+            setCellAt(i, cells[i].getPlayer());
         }
     }
 
@@ -55,6 +59,10 @@ public class Board implements Iterable<Cell>, Parcelable {
         readFromParcel(in);
     }
 
+    protected Cell[] getCells() {
+        return cells;
+    }
+
     /**
      * Set the cell at index to the player value
      *
@@ -62,9 +70,9 @@ public class Board implements Iterable<Cell>, Parcelable {
      */
     public boolean setCellAt(int index, CellVal player) {
         checkRobust();
-        if (cellAt(index).getVal() != CellVal.B)
+        if (cellAt(index).getPlayer() != CellVal.B)
             return false;
-        cells[index].setVal(player);
+        cells[index].setPlayer(player);
         score[index / 3] += player.getVal();
         score[3 + index % 3] += player.getVal();
         if ((index / 3) == (index % 3)) score[2 * 3] += player.getVal();
@@ -75,11 +83,12 @@ public class Board implements Iterable<Cell>, Parcelable {
     /**
      * Called to undo a move
      * Subtracts score and replaces value with blank cell
+     *
      * @param index
      */
     public void clearCellAt(int index) {
-        CellVal prevPlayer = cellAt(index).getVal();
-        cells[index].setVal(CellVal.B);
+        CellVal prevPlayer = cellAt(index).getPlayer();
+        cells[index].setPlayer(CellVal.B);
         score[index / 3] -= prevPlayer.getVal();
         score[3 + index % 3] -= prevPlayer.getVal();
         if ((index / 3) == (index % 3)) score[2 * 3] -= prevPlayer.getVal();
@@ -114,6 +123,20 @@ public class Board implements Iterable<Cell>, Parcelable {
         return new Cell();//TODO
     }
 
+    public int getBoardScoreForPlayer(CellVal player) {
+        int[] score = getScore();
+        int boardScore = 0;
+        for (int i : score) {
+            if (i == player.getVal())
+                boardScore += 1;
+            if (i == 2 * player.getVal())
+                boardScore += 2;
+            if (i == 3 * player.getVal())
+                boardScore += 9;
+        }
+        return boardScore;
+    }
+
     public boolean solved() {
         return (solved(CellVal.X) || solved(CellVal.O));
     }
@@ -146,7 +169,7 @@ public class Board implements Iterable<Cell>, Parcelable {
         String s = "";
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                s += (cells[i * 3 + j].getVal() + " ");
+                s += (cells[i * 3 + j].getPlayer() + " ");
             }
             s += "\n";
         }
@@ -190,6 +213,10 @@ public class Board implements Iterable<Cell>, Parcelable {
         }
 
     };
+
+    public int[] getScore() {
+        return score;
+    }
 
     private class CellIterator implements Iterator<Cell> {
         int current;

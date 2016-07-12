@@ -16,38 +16,20 @@
 
 package com.game.prayansh.ultimatetictactoe.activities;
 
-import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.game.prayansh.ultimatetictactoe.R;
 import com.game.prayansh.ultimatetictactoe.exceptions.BoardSolvedException;
 import com.game.prayansh.ultimatetictactoe.exceptions.GameOverException;
 import com.game.prayansh.ultimatetictactoe.exceptions.InvalidBlockException;
 import com.game.prayansh.ultimatetictactoe.exceptions.InvalidMoveException;
-import com.game.prayansh.ultimatetictactoe.models.Board;
 import com.game.prayansh.ultimatetictactoe.models.CellVal;
 import com.game.prayansh.ultimatetictactoe.models.Game;
 import com.game.prayansh.ultimatetictactoe.models.Move;
-import com.game.prayansh.ultimatetictactoe.models.TTTStack;
-import com.game.prayansh.ultimatetictactoe.ui.BoardView;
 import com.game.prayansh.ultimatetictactoe.ui.CellView;
 import com.game.prayansh.ultimatetictactoe.ui.GameUI;
-import com.game.prayansh.ultimatetictactoe.ui.Theme;
-import com.game.prayansh.ultimatetictactoe.ui.ThemeManager;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * Created by Prayansh on 16-07-02.

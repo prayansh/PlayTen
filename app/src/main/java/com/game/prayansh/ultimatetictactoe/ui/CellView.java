@@ -17,14 +17,9 @@
 package com.game.prayansh.ultimatetictactoe.ui;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
-import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import com.game.prayansh.ultimatetictactoe.R;
 import com.game.prayansh.ultimatetictactoe.models.CellVal;
 
 /**

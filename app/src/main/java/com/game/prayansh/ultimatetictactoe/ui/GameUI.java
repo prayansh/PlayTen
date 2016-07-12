@@ -16,9 +16,6 @@
 
 package com.game.prayansh.ultimatetictactoe.ui;
 
-import android.graphics.Bitmap;
-import android.os.Bundle;
-
 import com.game.prayansh.ultimatetictactoe.models.Game;
 import com.game.prayansh.ultimatetictactoe.models.TTTStack;
 

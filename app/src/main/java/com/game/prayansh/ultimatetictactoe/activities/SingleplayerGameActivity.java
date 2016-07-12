@@ -16,9 +16,7 @@
 
 package com.game.prayansh.ultimatetictactoe.activities;
 
-import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Toast;
 
@@ -27,6 +25,8 @@ import com.game.prayansh.ultimatetictactoe.exceptions.BoardSolvedException;
 import com.game.prayansh.ultimatetictactoe.exceptions.GameOverException;
 import com.game.prayansh.ultimatetictactoe.exceptions.InvalidBlockException;
 import com.game.prayansh.ultimatetictactoe.exceptions.InvalidMoveException;
+import com.game.prayansh.ultimatetictactoe.models.Board;
+import com.game.prayansh.ultimatetictactoe.models.Cell;
 import com.game.prayansh.ultimatetictactoe.models.CellVal;
 import com.game.prayansh.ultimatetictactoe.models.Game;
 import com.game.prayansh.ultimatetictactoe.models.Move;
@@ -34,6 +34,9 @@ import com.game.prayansh.ultimatetictactoe.ui.BoardView;
 import com.game.prayansh.ultimatetictactoe.ui.CellView;
 import com.game.prayansh.ultimatetictactoe.ui.GameUI;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 import butterknife.OnClick;
@@ -43,7 +46,7 @@ import butterknife.OnClick;
  */
 public class SinglePlayerGameActivity extends GameActivity {
 
-    private static final long AI_MOVE_DURATION = 2000;
+    private static final long AI_MOVE_DURATION = 500;
     final Handler handler = new Handler();
 
     private void toggleInteractions(boolean enable) {
@@ -53,6 +56,8 @@ public class SinglePlayerGameActivity extends GameActivity {
                 bv.getChildAt(j).setClickable(enable);
             }
         }
+        undo.setClickable(enable);
+        restart.setClickable(enable);
     }
 
     Runnable pcMove = new Runnable() {
@@ -111,7 +116,7 @@ public class SinglePlayerGameActivity extends GameActivity {
                     block = randomizer.nextInt(9);
                 else
                     block = game.getContextBoardIndex();
-                cell = randomizer.nextInt(9);
+                cell = cellGen(block, player);
                 Move m = game.playMove(block, cell);
                 movePlayed = true;
             } catch (InvalidMoveException | InvalidBlockException | BoardSolvedException e) {
@@ -127,9 +132,31 @@ public class SinglePlayerGameActivity extends GameActivity {
         highlightContextBoards();
     }
 
+    @Override
     @OnClick(R.id.bUndo)
     public void undoMove() {
         super.undoMove();
         super.undoMove();
+    }
+
+    private int cellGen(int block, CellVal player) {
+        Board board = GameUI.getInstance().getGame().getBoards()[block];
+        int defaultScore = board.getBoardScoreForPlayer(player);
+        int index = -1;
+        for (int i = 0; i < 9; i++) {
+            Cell c = board.cellAt(i);
+            if (c.getPlayer() == CellVal.B) {
+                if (index == -1)
+                    index = i;
+                Board newBoard = new Board(board);
+                newBoard.setCellAt(i, player);
+                int newScore = newBoard.getBoardScoreForPlayer(player);
+                if (defaultScore < newScore) {
+                    defaultScore = newScore;
+                    index = i;
+                }
+            }
+        }
+        return index;
     }
 }

@@ -88,7 +88,7 @@ public class Game {
      * contextboard = -1 if free hit
      *
      * @see - check for contextboard = -1 before calling
-     */ //FIXME clean and make better code
+     */
     public Move playMove(int block, int cell) throws InvalidMoveException, GameOverException, InvalidBlockException, BoardSolvedException {
         CellVal player = getPlayer();
         int contextIndex = getContextBoardIndex();
@@ -106,7 +106,6 @@ public class Game {
             throw new BoardSolvedException("Board is solved", contextIndex);
         }
 
-        //FIXME REDUNDANT CODE????
         if (getContextBoardIndex() == -1)
             throw new IllegalStateException("No Context Board");
 
