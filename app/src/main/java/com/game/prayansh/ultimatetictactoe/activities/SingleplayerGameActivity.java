@@ -35,9 +35,15 @@ import com.game.prayansh.ultimatetictactoe.ui.CellView;
 import com.game.prayansh.ultimatetictactoe.ui.GameUI;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.Set;
+import java.util.TreeMap;
 
 import butterknife.OnClick;
 
@@ -116,7 +122,7 @@ public class SinglePlayerGameActivity extends GameActivity {
                     block = randomizer.nextInt(9);
                 else
                     block = game.getContextBoardIndex();
-                cell = cellGen(block, player);
+                cell = cellGenAdvanced(block, player);
                 Move m = game.playMove(block, cell);
                 movePlayed = true;
             } catch (InvalidMoveException | InvalidBlockException | BoardSolvedException e) {
@@ -151,12 +157,69 @@ public class SinglePlayerGameActivity extends GameActivity {
                 Board newBoard = new Board(board);
                 newBoard.setCellAt(i, player);
                 int newScore = newBoard.getBoardScoreForPlayer(player);
-                if (defaultScore < newScore) {
+                if (defaultScore < newScore && !GameUI.getInstance().getGame().getBoards()[i]
+                        .solved()) {
                     defaultScore = newScore;
                     index = i;
                 }
             }
         }
         return index;
+    }
+
+    private int cellGenAdvanced(int block, CellVal player) {
+        Board board = GameUI.getInstance().getGame().getBoards()[block];
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < 9; i++) {
+            Cell c = board.cellAt(i);
+            if (c.getPlayer() == CellVal.B) {
+                Board newBoard = new Board(board);
+                newBoard.setCellAt(i, player);
+                int newScore = newBoard.getBoardScoreForPlayer(player);
+                map.put(i, newScore);
+            }
+        }
+        LinkedHashMap<Integer, Integer> sortedByValue = sort(map);
+
+        int index = -1;
+        Board[] boards = GameUI.getInstance().getGame().getBoards();
+        Set<Map.Entry<Integer, Integer>> mappings = sortedByValue.entrySet();
+        CellVal otherPlayer = (player == CellVal.X) ? CellVal.O : CellVal.X;
+        for (Map.Entry<Integer, Integer> mapping : mappings) {
+            index = mapping.getKey();
+            if (boards[index].solved() && boards[index].winner() == otherPlayer) {
+                continue;
+            } else if (boards[index].getBoardScoreForPlayer(player) < boards[index]
+                    .getBoardScoreForPlayer(otherPlayer)) {
+                continue;
+            } else {
+                break;
+            }
+        }
+
+        return index;
+    }
+
+    private LinkedHashMap<Integer, Integer> sort(HashMap map) {
+        Set<Map.Entry<Integer, Integer>> entries = map.entrySet();
+        Comparator<Map.Entry<Integer, Integer>> valueComparator = new Comparator<Map.Entry<Integer, Integer>>
+                () {
+            @Override
+            public int compare(Map.Entry<Integer, Integer> e1, Map.Entry<Integer, Integer> e2) {
+                int v1 = e1.getValue();
+                int v2 = e2.getValue();
+                return (v1 < v2) ? 1 : -1;
+            }
+        };
+        // Sort method needs a List, so let's first convert Set to List in Java
+        List<Map.Entry<Integer, Integer>> listOfEntries = new ArrayList<>(entries);
+        // sorting HashMap by values using comparator
+        Collections.sort(listOfEntries, valueComparator);
+        LinkedHashMap<Integer, Integer> sortedByValue = new LinkedHashMap<>(listOfEntries.size());
+        // copying entries from List to Map
+        for (Map.Entry<Integer, Integer> entry : listOfEntries) {
+            sortedByValue.put(entry.getKey(), entry.getValue());
+        }
+        return sortedByValue;
     }
 }
