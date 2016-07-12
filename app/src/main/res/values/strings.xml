@@ -19,4 +19,6 @@
     <string name="play">PLAY</string>
     <string name="shared_prefs">prefs</string>
     <string name="prefs_theme_key">theme_key</string>
+    <string name="single_play">Single Player</string>
+    <string name="local_play">Multiplayer</string>
 </resources>

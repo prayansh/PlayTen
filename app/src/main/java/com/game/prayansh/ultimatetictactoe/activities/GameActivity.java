@@ -50,7 +50,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
- * Created by Prayansh on 16-07-02.
+ * Created by Prayansh on 16-07-12.
  */
 public class GameActivity extends AppCompatActivity {
 
@@ -66,23 +66,16 @@ public class GameActivity extends AppCompatActivity {
     @BindView(R.id.bUndo)
     Button undo;
 
-    private View.OnClickListener cellTouchListener;
+    protected View.OnClickListener cellTouchListener;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gameplay_activity);
         ButterKnife.bind(this);
-        cellTouchListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                clickView(v);
-            }
-        };
-        setupThemeAndViews();
     }
 
-    private void setupThemeAndViews() {
+    protected void setupThemeAndViews() {
         Theme theme = ThemeManager.getTheme();
         Typeface typeFace = Typeface.createFromAsset(getAssets(), "fonts/Raleway-Regular.ttf");
         // Setup views
@@ -122,7 +115,7 @@ public class GameActivity extends AppCompatActivity {
         return bv;
     }
 
-    private void highlightContextBoards() {
+    protected void highlightContextBoards() {
         Board[] boards = GameUI.getInstance().getGame().getBoards();
         int index = GameUI.getInstance().getGame().getContextBoardIndex();
         for (int i = 0; i < boards.length; i++) {
@@ -133,7 +126,7 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
-    private void checkWins() {
+    protected void checkWins() {
         Game game = GameUI.getInstance().getGame();
         int i = 0;
         for (Board b : game.getBoards()) {
@@ -146,7 +139,7 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
-    private void updatePlayerInfo() {
+    protected void updatePlayerInfo() {
         switch (GameUI.getInstance().getGame().getPlayer()) {
             case X:
                 currentPlayer.setImageResource(ThemeManager.getCross());
@@ -155,7 +148,6 @@ public class GameActivity extends AppCompatActivity {
                 currentPlayer.setImageResource(ThemeManager.getCircle());
                 break;
         }
-
     }
 
     @Override
@@ -189,34 +181,6 @@ public class GameActivity extends AppCompatActivity {
         updatePlayerInfo();
     }
 
-    private void clickView(View v) {
-        CellView cv = (CellView) v;
-        Game game = GameUI.getInstance().getGame();
-        CellVal player = game.getPlayer();
-
-        //TODO create free hit message
-
-        try {
-            Move m = game.playMove(cv.getBlock(), cv.getCell());
-            cv.mark(player);
-        } catch (InvalidMoveException e) {
-            Toast.makeText(getApplicationContext(), "You can't play there", Toast.LENGTH_SHORT).show();
-        } catch (GameOverException e) {
-            cv.mark(player);
-            buildGameOverDialog(e.getWinner());
-        } catch (InvalidBlockException e) {
-            Toast.makeText(getApplicationContext(),
-                    "You have to play on " + e.getContextIndex() + " board", Toast.LENGTH_SHORT).show();
-        } catch (BoardSolvedException e) {
-            Toast.makeText(getApplicationContext(), "You can't play on solved board", Toast.LENGTH_SHORT).show();
-        } finally {
-            checkWins();
-            updatePlayerInfo();
-            highlightContextBoards();
-        }
-
-    }
-
     @OnClick(R.id.bUndo)
     public void undoMove() {
         if (GameUI.getInstance().getGame().isStarted()) {
@@ -239,7 +203,7 @@ public class GameActivity extends AppCompatActivity {
         setupThemeAndViews();
     }
 
-    private void buildGameOverDialog(CellVal winner) {
+    protected void buildGameOverDialog(CellVal winner) {
         int resourceId = (winner == CellVal.X) ? ThemeManager.getCross() : ThemeManager.getCircle();
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
@@ -257,5 +221,12 @@ public class GameActivity extends AppCompatActivity {
         });
         AlertDialog alertDialog = dialogBuilder.create();
         alertDialog.show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+
     }
 }

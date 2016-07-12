@@ -19,15 +19,11 @@ package com.game.prayansh.ultimatetictactoe.activities;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.game.prayansh.ultimatetictactoe.R;
 import com.game.prayansh.ultimatetictactoe.ui.GameUI;
@@ -48,8 +44,10 @@ public class MainActivity extends AppCompatActivity {
     ImageView ivCross;
     @BindView(R.id.ivCircle)
     ImageView ivCircle;
-    @BindView(R.id.bPlay)
-    Button newGame;
+    @BindView(R.id.bSingle)
+    Button single;
+    @BindView(R.id.bLocal)
+    Button local;
     @BindView(R.id.bSettings)
     Button settings;
 
@@ -59,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.main_activity);
         ButterKnife.bind(this);
         setupTheme();
-
     }
 
     private void setupTheme() {
@@ -69,18 +66,28 @@ public class MainActivity extends AppCompatActivity {
         background.setBackgroundResource(mTheme.getBackground());
         ivCross.setImageResource(mTheme.getCross());
         ivCircle.setImageResource(mTheme.getCircle());
-        newGame.setTextColor(mTheme.getColor());
-        newGame.setTypeface(typeFace);
+        single.setTextColor(mTheme.getColor());
+        single.setTypeface(typeFace);
+        single.setBackgroundResource(mTheme.getBtn());
+        local.setTextColor(mTheme.getColor());
+        local.setTypeface(typeFace);
+        local.setBackgroundResource(mTheme.getBtn());
         settings.setTextColor(mTheme.getColor());
         settings.setTypeface(typeFace);
-        newGame.setBackgroundResource(mTheme.getBtn());
         settings.setBackgroundResource(mTheme.getBtn());
     }
 
-    @OnClick(R.id.bPlay)
-    public void newGame() {
+    @OnClick(R.id.bSingle)
+    public void newSingleGame() {
         GameUI.getInstance().newGame();
-        Intent newGameIntent = new Intent(this, GameActivity.class);
+        Intent newGameIntent = new Intent(this, SinglePlayerGameActivity.class);
+        startActivity(newGameIntent);
+    }
+
+    @OnClick(R.id.bLocal)
+    public void newLocalGame() {
+        GameUI.getInstance().newGame();
+        Intent newGameIntent = new Intent(this, MultiPlayerGameActivity.class);
         startActivity(newGameIntent);
     }
 
