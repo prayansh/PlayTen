@@ -27,16 +27,21 @@ public class Theme {
     private final int circle;
     private final int color;
     private final int blank;
+    private final int blankHighlight;
+    private final int btn;
 
     public Theme(int gridColor, int background,
-                 int cross, int circle, int color, int blank, int textColor) {
+                 int cross, int circle, int color, int blank, int blankHighlight, int textColor,
+                 int btn) {
         this.gridColor = gridColor;
         this.background = background;
         this.cross = cross;
         this.circle = circle;
         this.color = color;
         this.blank = blank;
+        this.blankHighlight = blankHighlight;
         this.textColor = textColor;
+        this.btn = btn;
     }
 
     public int getGridColor() {
@@ -65,5 +70,13 @@ public class Theme {
 
     public int getTextColor() {
         return textColor;
+    }
+
+    public int getHighlight() {
+        return blankHighlight;
+    }
+
+    public int getBtn() {
+        return btn;
     }
 }

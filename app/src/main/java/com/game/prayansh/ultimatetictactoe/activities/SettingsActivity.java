@@ -16,6 +16,7 @@
 
 package com.game.prayansh.ultimatetictactoe.activities;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -41,12 +42,14 @@ public class SettingsActivity extends AppCompatActivity {
     ImageView circle;
     @BindView(R.id.tMinimal)
     Button minimal;
-    @BindView(R.id.tClassic)
-    Button classic;
+    @BindView(R.id.tDC)
+    Button dc;
     @BindView(R.id.tMarvel)
     Button marvel;
     @BindView(R.id.bg)
     View bg;
+
+    SharedPreferences prefs;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,24 +57,28 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.settings_activity);
         ButterKnife.bind(this);
         initTheme();
+        prefs = getSharedPreferences(getString(R.string.shared_prefs), MODE_PRIVATE);
     }
 
     @OnClick(R.id.tMinimal)
     public void setMinimal() {
         ThemeManager.setMinimal(getApplicationContext());
         initTheme();
-    }
-
-    @OnClick(R.id.tClassic)
-    public void setClassic() {
-        ThemeManager.setClassic(getApplicationContext());
-        initTheme();
+        prefs.edit().putInt(getString(R.string.prefs_theme_key), 0).apply();
     }
 
     @OnClick(R.id.tMarvel)
     public void setMarvel() {
         ThemeManager.setMarvel(getApplicationContext());
         initTheme();
+        prefs.edit().putInt(getString(R.string.prefs_theme_key), 1).apply();
+    }
+
+    @OnClick(R.id.tDC)
+    public void setDC() {
+        ThemeManager.setDC(getApplicationContext());
+        initTheme();
+        prefs.edit().putInt(getString(R.string.prefs_theme_key), 2).apply();
     }
 
     private void initTheme() {
@@ -79,6 +86,12 @@ public class SettingsActivity extends AppCompatActivity {
         circle.setImageResource(theme.getCircle());
         cross.setImageResource(theme.getCross());
         bg.setBackgroundResource(theme.getBackground());
+        minimal.setBackgroundResource(theme.getBtn());
+        dc.setBackgroundResource(theme.getBtn());
+        marvel.setBackgroundResource(theme.getBtn());
+        minimal.setTextColor(theme.getColor());
+        dc.setTextColor(theme.getColor());
+        marvel.setTextColor(theme.getColor());
     }
 
 }

@@ -15,11 +15,12 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/bg"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical">
+              android:id="@+id/bg"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center"
+              android:orientation="vertical"
+              android:background="@drawable/minimal_background">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -48,19 +49,19 @@
         android:layout_width="150dip"
         android:layout_height="wrap_content"
         android:layout_margin="10dip"
-        android:background="@drawable/btn_bg"
+        android:background="@drawable/btn_light"
         android:padding="5dip"
         android:text="@string/theme_minimal"
         android:textColor="@color/colorPrimary" />
 
     <Button
-        android:id="@+id/tClassic"
+        android:id="@+id/tDC"
         android:layout_width="150dip"
         android:layout_height="wrap_content"
         android:layout_margin="10dip"
-        android:background="@drawable/btn_bg"
+        android:background="@drawable/btn_light"
         android:padding="5dip"
-        android:text="@string/theme_classic"
+        android:text="@string/theme_dc"
         android:textColor="@color/colorPrimary" />
 
     <Button
@@ -68,7 +69,7 @@
         android:layout_width="150dip"
         android:layout_height="wrap_content"
         android:layout_margin="10dip"
-        android:background="@drawable/btn_bg"
+        android:background="@drawable/btn_light"
         android:padding="5dip"
         android:text="@string/theme_marvel"
         android:textColor="@color/colorPrimary" />

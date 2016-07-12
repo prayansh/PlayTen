@@ -17,6 +17,7 @@
 package com.game.prayansh.ultimatetictactoe;
 
 import android.app.Application;
+import android.content.SharedPreferences;
 
 import com.game.prayansh.ultimatetictactoe.ui.GameUI;
 import com.game.prayansh.ultimatetictactoe.ui.ThemeManager;
@@ -25,8 +26,6 @@ import com.game.prayansh.ultimatetictactoe.ui.ThemeManager;
  * Created by Prayansh on 16-05-13.
  */
 public class MyApplication extends Application {
-
-    public static final int BOARD_REQUEST_CODE = 31 * 17 + 3;
 
     @Override
     public void onCreate() {
@@ -40,7 +39,22 @@ public class MyApplication extends Application {
 
     private void initTheme() {
         //Handle theme changes with sharepreferences
-        ThemeManager.setMarvel(getApplicationContext());
+        SharedPreferences preferences = getSharedPreferences(getString(R.string.shared_prefs), MODE_PRIVATE);
+        int theme = preferences.getInt(getString(R.string.prefs_theme_key), 0);
+        switch (theme) {
+            case 0:
+                ThemeManager.setMinimal(getApplicationContext());
+                break;
+            case 1:
+                ThemeManager.setMarvel(getApplicationContext());
+                break;
+            case 2:
+                ThemeManager.setDC(getApplicationContext());
+                break;
+            default:
+                ThemeManager.setMinimal(getApplicationContext());
+                break;
+        }
     }
 
     protected void initSingletons() {

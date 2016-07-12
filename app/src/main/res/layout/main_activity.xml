@@ -15,12 +15,12 @@
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/bg"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/grad_blue"
-    android:gravity="center"
-    android:orientation="vertical">
+                android:id="@+id/bg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/minimal_background"
+                android:gravity="center"
+                android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -34,6 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvTitle"
             android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dip"
             android:gravity="center"
             android:orientation="horizontal"
             android:paddingLeft="24dip"
@@ -42,34 +43,46 @@
             <ImageView
                 android:id="@+id/ivCross"
                 style="@style/player_display"
-                android:src="@drawable/cross" />
+                android:src="@drawable/cross_minimal"/>
 
             <ImageView
                 android:id="@+id/ivCircle"
                 style="@style/player_display"
-                android:src="@drawable/circle" />
+                android:src="@drawable/circle_minimal"/>
         </LinearLayout>
 
         <Button
-            android:id="@+id/bPlay"
+            android:id="@+id/bSingle"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="150dip"
             android:layout_height="wrap_content"
-            android:layout_margin="20dip"
-            android:background="@drawable/btn_bg"
+            android:layout_margin="10dip"
+            android:background="@drawable/btn_light"
             android:padding="15dip"
-            android:text="@string/play"
-            android:textColor="@color/colorPrimary" />
+            android:text="@string/single_play"
+            android:textColor="@color/colorPrimary"/>
+
+        <Button
+            android:id="@+id/bLocal"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="150dip"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dip"
+            android:background="@drawable/btn_light"
+            android:padding="15dip"
+            android:text="@string/local_play"
+            android:textColor="@color/colorPrimary"/>
 
         <Button
             android:id="@+id/bSettings"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="150dip"
             android:layout_height="wrap_content"
-            android:background="@drawable/btn_bg"
+            android:layout_margin="10dip"
+            android:background="@drawable/btn_light"
             android:padding="15dip"
             android:text="@string/settings"
-            android:textColor="@color/colorPrimary" />
+            android:textColor="@color/colorPrimary"/>
     </LinearLayout>
 
 </RelativeLayout>

@@ -29,12 +29,10 @@ public class TTTStack implements Iterable<Move>, Parcelable {
     private int top;
     private int contextIndex;
     private Move[] data;
-    private boolean freeHit;
 
     public TTTStack() {
         top = -1;
         contextIndex = -1;
-        freeHit = true;
         data = new Move[MAX_CAPACITY];
     }
 
@@ -42,7 +40,6 @@ public class TTTStack implements Iterable<Move>, Parcelable {
         top = in.readInt();
         contextIndex = in.readInt();
         data = in.createTypedArray(Move.CREATOR);
-        freeHit = in.readByte() != 0;
     }
 
     public static final Creator<TTTStack> CREATOR = new Creator<TTTStack>() {
@@ -62,7 +59,6 @@ public class TTTStack implements Iterable<Move>, Parcelable {
     }
 
     public boolean push(Move m) {
-        freeHit = false;
         if (m.getBoardNo() == contextIndex) {
             data[++top] = m;
             contextIndex = m.getCellNo();
@@ -97,13 +93,8 @@ public class TTTStack implements Iterable<Move>, Parcelable {
         return contextIndex;
     }
 
-    public boolean getFlag() {
-        return freeHit;
-    }
-
     public void setContextIndex(int contextIndex) {
         this.contextIndex = contextIndex;
-        freeHit = true;
     }
 
     @Override
@@ -120,7 +111,6 @@ public class TTTStack implements Iterable<Move>, Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(top);
         dest.writeInt(contextIndex);
-        dest.writeByte((byte) (freeHit ? 1 : 0));
         dest.writeParcelableArray(data, flags);
     }
 

@@ -15,21 +15,20 @@
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:custom="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/bg"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/grad_blue"
-    android:gravity="center_vertical"
-    android:orientation="vertical"
-    android:padding="10dip">
+                xmlns:custom="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/bg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/minimal_background"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
 
     <com.game.prayansh.ultimatetictactoe.ui.BoardView
         android:id="@+id/board"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         custom:separatorWidth="1dp"
-        custom:type="1" />
+        custom:type="1"/>
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -43,7 +42,7 @@
         <ImageView
             android:id="@+id/ivInfo"
             style="@style/player_display"
-            android:src="@drawable/circle_minimal" />
+            android:src="@drawable/circle_minimal"/>
 
 
         <Button
@@ -51,20 +50,20 @@
             android:layout_width="150dip"
             android:layout_height="wrap_content"
             android:layout_margin="20dip"
-            android:background="@drawable/btn_bg"
+            android:background="@drawable/btn_light"
             android:padding="15dip"
             android:text="@string/undo"
-            android:textColor="@color/colorPrimary" />
+            android:textColor="@color/colorPrimary"/>
 
         <Button
             android:id="@+id/bRestart"
             android:layout_width="150dip"
             android:layout_height="wrap_content"
             android:layout_margin="20dip"
-            android:background="@drawable/btn_bg"
+            android:background="@drawable/btn_light"
             android:padding="15dip"
             android:text="@string/restart"
-            android:textColor="@color/colorPrimary" />
+            android:textColor="@color/colorPrimary"/>
 
     </LinearLayout>
 

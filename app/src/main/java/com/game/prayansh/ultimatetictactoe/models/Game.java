@@ -88,13 +88,15 @@ public class Game {
      * contextboard = -1 if free hit
      *
      * @see - check for contextboard = -1 before calling
-     */ //FIXME clean and make better code
+     */
     public Move playMove(int block, int cell) throws InvalidMoveException, GameOverException, InvalidBlockException, BoardSolvedException {
         CellVal player = getPlayer();
         int contextIndex = getContextBoardIndex();
+        boolean freeHit = false;
 
         if (contextIndex == -1) {
             setContextBoardIndex(block);
+            freeHit = true;
         } else if (contextIndex != block) {
             throw new InvalidBlockException("Found " + contextIndex + " but need to play at " + block, contextIndex, block);
         }
@@ -104,14 +106,13 @@ public class Game {
             throw new BoardSolvedException("Board is solved", contextIndex);
         }
 
-        //FIXME REDUNDANT CODE????
         if (getContextBoardIndex() == -1)
             throw new IllegalStateException("No Context Board");
 
         contextIndex = getContextBoardIndex();
 
         boolean valid = getContextGameBoard().setCellAt(cell, player);
-        Move m = new Move(getContextBoardIndex(), cell, moves.getFlag());
+        Move m = new Move(getContextBoardIndex(), cell, freeHit);
         if (!valid || !moves.push(m)) {
             throw new InvalidMoveException("Invalid Move for Player " + player.name() + ":" + cell);
         }

@@ -17,14 +17,9 @@
 package com.game.prayansh.ultimatetictactoe.ui;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
-import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import com.game.prayansh.ultimatetictactoe.R;
 import com.game.prayansh.ultimatetictactoe.models.CellVal;
 
 /**
@@ -34,7 +29,7 @@ public class CellView extends ImageView {
 
     private int mResource;
     private int block, cell;
-    private int blankResource;
+    private int blankResource, highlightResource;
 
     public CellView(Context context) {
         this(context, null);
@@ -76,6 +71,17 @@ public class CellView extends ImageView {
         mResource = ThemeManager.getCircle();
     }
 
+    private void setEmpty() {
+        mResource = blankResource;
+    }
+
+    public void highlight(boolean highlight) {
+        if (mResource == highlightResource || mResource == blankResource) {
+            mResource = (highlight) ? highlightResource : blankResource;
+            redraw();
+        }
+    }
+
     public void mark(CellVal player) {
         switch (player) {
             case X:
@@ -91,15 +97,15 @@ public class CellView extends ImageView {
         redraw();
     }
 
-    private void setEmpty() {
-        mResource = blankResource;
-    }
-
     private void redraw() {
         setImageResource(mResource);
     }
 
     public void setBlankResource(int blankResource) {
         this.blankResource = blankResource;
+    }
+
+    public void setHighlightResource(int highlightResource) {
+        this.highlightResource = highlightResource;
     }
 }

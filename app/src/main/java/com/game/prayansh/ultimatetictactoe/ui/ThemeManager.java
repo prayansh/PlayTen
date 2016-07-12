@@ -35,8 +35,10 @@ public class ThemeManager {
                 (seed > 5) ? R.drawable.cap : R.drawable.iron_man,
                 (seed <= 5) ? R.drawable.cap : R.drawable.iron_man,
                 ContextCompat.getColor(context, R.color.mt_black),
-                R.drawable.blank_minimal,
-                Color.rgb(255, 255, 255));
+                R.drawable.blank_white,
+                R.drawable.blank_white_highlight,
+                Color.rgb(255, 255, 255),
+                R.drawable.btn_light);
     }
 
     public static void setMinimal(Context context) {
@@ -45,19 +47,34 @@ public class ThemeManager {
                 R.drawable.cross_minimal,
                 R.drawable.circle_minimal,
                 ContextCompat.getColor(context, R.color.mt_black),
-                R.drawable.blank_minimal,
-                Color.rgb(255, 255, 255));
+                R.drawable.blank_white,
+                R.drawable.blank_white_highlight,
+                Color.rgb(255, 255, 255),
+                R.drawable.btn_light);
     }
+//
+//    public static void setDC(Context context) {
+//        int white = Color.rgb(255, 255, 255);
+//        theme = new Theme(white,
+//                R.drawable.grad_blue,
+//                R.drawable.cross,
+//                R.drawable.circle,
+//                ContextCompat.getColor(context, R.color.belize_hole),
+//                0,
+//                white);
+//    }
 
-    public static void setClassic(Context context) {
-        int white = Color.rgb(255, 255, 255);
-        theme = new Theme(white,
-                R.drawable.grad_blue,
-                R.drawable.cross,
-                R.drawable.circle,
-                ContextCompat.getColor(context, R.color.belize_hole),
-                0,
-                white);
+    public static void setDC(Context context) {
+        int seed = (int) (Math.random() * 10);
+        theme = new Theme(0,
+                R.drawable.black_background,
+                (seed > 5) ? R.drawable.batman : R.drawable.superman,
+                (seed <= 5) ? R.drawable.batman : R.drawable.superman,
+                ContextCompat.getColor(context, R.color.white),
+                R.drawable.blank_black,
+                R.drawable.blank_black_highlight,
+                Color.rgb(255, 255, 255),
+                R.drawable.btn_dark);
     }
 
     public static Theme getTheme() {

@@ -12,9 +12,13 @@
     <string name="win_dialog_button_text">Return to main menu</string>
     <string name="game_over">Game Over</string>
     <string name="theme_minimal">Minimal</string>
-    <string name="theme_classic">Classic</string>
-    <string name="theme_marvel">Marvel</string>
+    <string name="theme_dc">DC</string>
+    <string name="theme_marvel">Civil War</string>
     <string name="undo">Undo</string>
     <string name="restart">Restart</string>
     <string name="play">PLAY</string>
+    <string name="shared_prefs">prefs</string>
+    <string name="prefs_theme_key">theme_key</string>
+    <string name="single_play">Single Player</string>
+    <string name="local_play">Multiplayer</string>
 </resources>

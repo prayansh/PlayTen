@@ -16,13 +16,11 @@
 
 package com.game.prayansh.ultimatetictactoe.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -30,15 +28,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.game.prayansh.ultimatetictactoe.R;
-import com.game.prayansh.ultimatetictactoe.exceptions.BoardSolvedException;
-import com.game.prayansh.ultimatetictactoe.exceptions.GameOverException;
-import com.game.prayansh.ultimatetictactoe.exceptions.InvalidBlockException;
-import com.game.prayansh.ultimatetictactoe.exceptions.InvalidMoveException;
 import com.game.prayansh.ultimatetictactoe.models.Board;
 import com.game.prayansh.ultimatetictactoe.models.CellVal;
 import com.game.prayansh.ultimatetictactoe.models.Game;
@@ -55,9 +46,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
- * Created by Prayansh on 16-07-02.
+ * Created by Prayansh on 16-07-12.
  */
-public class GameActivity extends AppCompatActivity {
+public abstract class GameActivity extends AppCompatActivity {
 
     private static final String STATE_STACK = "stack_state";
     @BindView(R.id.bg)
@@ -71,7 +62,7 @@ public class GameActivity extends AppCompatActivity {
     @BindView(R.id.bUndo)
     Button undo;
 
-    private View.OnClickListener cellTouchListener;
+    protected View.OnClickListener cellTouchListener;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -87,7 +78,7 @@ public class GameActivity extends AppCompatActivity {
         setupThemeAndViews();
     }
 
-    private void setupThemeAndViews() {
+    protected void setupThemeAndViews() {
         Theme theme = ThemeManager.getTheme();
         Typeface typeFace = Typeface.createFromAsset(getAssets(), "fonts/Raleway-Regular.ttf");
         // Setup views
@@ -96,15 +87,17 @@ public class GameActivity extends AppCompatActivity {
         restart.setTypeface(typeFace);
         undo.setTextColor(theme.getColor());
         undo.setTypeface(typeFace);
+        restart.setBackgroundResource(theme.getBtn());
+        undo.setBackgroundResource(theme.getBtn());
 
         // Setup Board
-        gameBoard.setType(0);
+        gameBoard.setType(1);
         gameBoard.setBorderPaint(theme.getGridColor());
         gameBoard.setBorderSize(10);
         for (int i = 0; i < gameBoard.getMaxChildren(); i++) {
             BoardView bv = new BoardView(getApplicationContext());
             bv.setBorderPaint(theme.getGridColor());
-            bv.setType(1);
+            bv.setType(0);
             gameBoard.addView(buildEmptyBoard(bv, i, theme));
         }
         updatePlayerInfo();
@@ -117,6 +110,7 @@ public class GameActivity extends AppCompatActivity {
             cv.setCell(j);
             //Set up view resources
             cv.setBlankResource(theme.getBlank());
+            cv.setHighlightResource(theme.getHighlight());
             cv.mark(CellVal.B);
             cv.setOnClickListener(cellTouchListener);
             bv.addView(cv);
@@ -124,7 +118,7 @@ public class GameActivity extends AppCompatActivity {
         return bv;
     }
 
-    private void highlightContextBoards() {
+    protected void highlightContextBoards() {
         Board[] boards = GameUI.getInstance().getGame().getBoards();
         int index = GameUI.getInstance().getGame().getContextBoardIndex();
         for (int i = 0; i < boards.length; i++) {
@@ -135,7 +129,7 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
-    private void checkWins() {
+    protected void checkWins() {
         Game game = GameUI.getInstance().getGame();
         int i = 0;
         for (Board b : game.getBoards()) {
@@ -148,7 +142,7 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
-    private void updatePlayerInfo() {
+    protected void updatePlayerInfo() {
         switch (GameUI.getInstance().getGame().getPlayer()) {
             case X:
                 currentPlayer.setImageResource(ThemeManager.getCross());
@@ -157,7 +151,6 @@ public class GameActivity extends AppCompatActivity {
                 currentPlayer.setImageResource(ThemeManager.getCircle());
                 break;
         }
-
     }
 
     @Override
@@ -191,57 +184,56 @@ public class GameActivity extends AppCompatActivity {
         updatePlayerInfo();
     }
 
-    private void clickView(View v) {
-        CellView cv = (CellView) v;
-        Game game = GameUI.getInstance().getGame();
-        CellVal player = game.getPlayer();
-
-        //TODO create free hit message
-
-        try {
-            Move m = game.playMove(cv.getBlock(), cv.getCell());
-            cv.mark(player);
-        } catch (InvalidMoveException e) {
-            Toast.makeText(getApplicationContext(), "You can't play there", Toast.LENGTH_SHORT).show();
-        } catch (GameOverException e) {
-            cv.mark(player);
-            buildGameOverDialog(e.getWinner());
-        } catch (InvalidBlockException e) {
-            Toast.makeText(getApplicationContext(),
-                    "You have to play on " + e.getContextIndex() + " board", Toast.LENGTH_SHORT).show();
-        } catch (BoardSolvedException e) {
-            Toast.makeText(getApplicationContext(), "You can't play on solved board", Toast.LENGTH_SHORT).show();
-        } finally {
-            checkWins();
-            updatePlayerInfo();
-            highlightContextBoards();
-        }
-
-    }
-
     @OnClick(R.id.bUndo)
     public void undoMove() {
         if (GameUI.getInstance().getGame().isStarted()) {
             Move m = GameUI.getInstance().getGame().undo();
             int block = m.getBoardNo(), cell = m.getCellNo();
             ((CellView) ((BoardView) gameBoard.getChildAt(block)).getChildAt(cell)).mark(CellVal.B);
+            if (m.isFreeHit())
+                GameUI.getInstance().getGame().setContextBoardIndex(-1);
+            else
+                GameUI.getInstance().getGame().setContextBoardIndex(block);
             highlightContextBoards();
             checkWins();
             updatePlayerInfo();
+        } else {
+            GameUI.getInstance().getGame().setContextBoardIndex(-1);
         }
     }
 
     @OnClick(R.id.bRestart)
     public void restart() {
-        GameUI.getInstance().newGame();
-        for (int i = 0; i < gameBoard.getMaxChildren(); i++) {
-            ((ViewGroup) gameBoard.getChildAt(i)).removeAllViews();
-        }
-        gameBoard.removeAllViews();
-        setupThemeAndViews();
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener
+                () {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                        GameUI.getInstance().newGame();
+                        for (int i = 0; i < gameBoard.getMaxChildren(); i++) {
+                            for (int j = 0; j < gameBoard.getMaxChildren(); j++) {
+                                ((CellView) ((ViewGroup) gameBoard.getChildAt(i)).getChildAt(j))
+                                        .mark(CellVal.B);
+                            }
+                        }
+//                        gameBoard.removeAllViews();
+//                        setupThemeAndViews();
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        dialog.dismiss();
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(GameActivity.this);
+        builder.setMessage("Restart game?").setPositiveButton("Restart", dialogClickListener)
+                .setNegativeButton("Cancel", dialogClickListener).show();
     }
 
-    private void buildGameOverDialog(CellVal winner) {
+    protected void buildGameOverDialog(CellVal winner) {
         int resourceId = (winner == CellVal.X) ? ThemeManager.getCross() : ThemeManager.getCircle();
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
@@ -260,4 +252,29 @@ public class GameActivity extends AppCompatActivity {
         AlertDialog alertDialog = dialogBuilder.create();
         alertDialog.show();
     }
+
+    @Override
+    public void onBackPressed() {
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener
+                () {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                        finish();
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        dialog.dismiss();
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(GameActivity.this);
+        builder.setMessage("Return to main menu?").setPositiveButton("Quit", dialogClickListener)
+                .setNegativeButton("Cancel", dialogClickListener).show();
+    }
+
+    protected abstract void clickView(View v);
 }

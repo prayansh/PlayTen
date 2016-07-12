@@ -41,10 +41,10 @@ public class BoardView extends ViewGroup {
 
     private static final int DEFAULT_COL_COUNT = 3;
     private static final int MARGIN = 20;
-    private static final int PADDING = 30;
+    private static final int IMAGE_PADDING = 30;
 
     private Paint mGridPaint;
-    private int type;
+    private int type; // 0 for CellView children, 1 for BoardView Children
     private int childSize;
     private int mColumnCount;
     private int mMaxChildren;
@@ -125,22 +125,20 @@ public class BoardView extends ViewGroup {
 
     @Override
     protected void dispatchDraw(Canvas canvas) {
+        Drawable d = null;
         if (winner == 1) {
-            Drawable d = getResources().getDrawable(ThemeManager.getCross());
-            if (d != null) {
-                d.setBounds(PADDING, PADDING, getWidth() - PADDING, getHeight() - PADDING);
-                d.draw(canvas);
-            }
+            d = getResources().getDrawable(ThemeManager.getCross());
         } else if (winner == -1) {
-            Drawable d = getResources().getDrawable(ThemeManager.getCircle());
-            if (d != null) {
-                d.setBounds(PADDING, PADDING, getWidth() - PADDING, getHeight() - PADDING);
-                d.draw(canvas);
+            d = getResources().getDrawable(ThemeManager.getCircle());
+        } else if (type == 0) {
+            for (int i = 0; i < getMaxChildren(); i++) {
+                ((CellView) getChildAt(i)).highlight(highlight);
             }
         }
-        if (highlight)
-            canvas.drawColor(Color.argb(150, 75, 75, 75));
-//            setAlpha(0.75f);
+        if (d != null) { //Draw Winner
+            d.setBounds(IMAGE_PADDING, IMAGE_PADDING, getWidth() - IMAGE_PADDING, getHeight() - IMAGE_PADDING);
+            d.draw(canvas);
+        }
 
         if (winner == 0) {
             super.dispatchDraw(canvas);

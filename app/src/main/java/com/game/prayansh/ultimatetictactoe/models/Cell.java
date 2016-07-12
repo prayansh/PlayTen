@@ -28,11 +28,11 @@ public class Cell implements Serializable {
         val = CellVal.B;
     }
 
-    public void setVal(CellVal val) {
+    public void setPlayer(CellVal val) {
         this.val = val;
     }
 
-    public CellVal getVal() {
+    public CellVal getPlayer() {
         return val;
     }
 
