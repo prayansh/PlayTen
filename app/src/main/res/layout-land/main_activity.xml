@@ -18,9 +18,10 @@
                 android:id="@+id/bg"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/grad_blue"
-                android:gravity="center|center_horizontal"
-                android:orientation="vertical">
+                android:background="@drawable/minimal_background"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="10dip">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -42,12 +43,12 @@
             <ImageView
                 android:id="@+id/ivCross"
                 style="@style/player_display"
-                android:src="@drawable/cross"/>
+                android:src="@drawable/cross_minimal"/>
 
             <ImageView
                 android:id="@+id/ivCircle"
                 style="@style/player_display"
-                android:src="@drawable/circle"/>
+                android:src="@drawable/circle_minimal"/>
         </LinearLayout>
 
         <Button
@@ -55,7 +56,7 @@
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="150dip"
             android:layout_height="wrap_content"
-            android:layout_margin="20dip"
+            android:layout_margin="10dip"
             android:background="@drawable/btn_light"
             android:padding="15dip"
             android:text="@string/single_play"
@@ -66,7 +67,7 @@
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="150dip"
             android:layout_height="wrap_content"
-            android:layout_margin="20dip"
+            android:layout_margin="10dip"
             android:background="@drawable/btn_light"
             android:padding="15dip"
             android:text="@string/local_play"
@@ -77,6 +78,7 @@
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="150dip"
             android:layout_height="wrap_content"
+            android:layout_margin="10dip"
             android:background="@drawable/btn_light"
             android:padding="15dip"
             android:text="@string/settings"
