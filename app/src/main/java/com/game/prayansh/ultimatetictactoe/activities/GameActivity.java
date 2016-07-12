@@ -16,6 +16,7 @@
 
 package com.game.prayansh.ultimatetictactoe.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -189,7 +190,7 @@ public abstract class GameActivity extends AppCompatActivity {
             Move m = GameUI.getInstance().getGame().undo();
             int block = m.getBoardNo(), cell = m.getCellNo();
             ((CellView) ((BoardView) gameBoard.getChildAt(block)).getChildAt(cell)).mark(CellVal.B);
-            if(m.isFreeHit())
+            if (m.isFreeHit())
                 GameUI.getInstance().getGame().setContextBoardIndex(-1);
             else
                 GameUI.getInstance().getGame().setContextBoardIndex(block);
@@ -203,12 +204,33 @@ public abstract class GameActivity extends AppCompatActivity {
 
     @OnClick(R.id.bRestart)
     public void restart() {
-        GameUI.getInstance().newGame();
-        for (int i = 0; i < gameBoard.getMaxChildren(); i++) {
-            ((ViewGroup) gameBoard.getChildAt(i)).removeAllViews();
-        }
-        gameBoard.removeAllViews();
-        setupThemeAndViews();
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener
+                () {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                        GameUI.getInstance().newGame();
+                        for (int i = 0; i < gameBoard.getMaxChildren(); i++) {
+                            for (int j = 0; j < gameBoard.getMaxChildren(); j++) {
+                                ((CellView) ((ViewGroup) gameBoard.getChildAt(i)).getChildAt(j))
+                                        .mark(CellVal.B);
+                            }
+                        }
+//                        gameBoard.removeAllViews();
+//                        setupThemeAndViews();
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        dialog.dismiss();
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(GameActivity.this);
+        builder.setMessage("Restart game?").setPositiveButton("Restart", dialogClickListener)
+                .setNegativeButton("Cancel", dialogClickListener).show();
     }
 
     protected void buildGameOverDialog(CellVal winner) {
@@ -233,8 +255,25 @@ public abstract class GameActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        finish();
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener
+                () {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                        finish();
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        dialog.dismiss();
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(GameActivity.this);
+        builder.setMessage("Return to main menu?").setPositiveButton("Quit", dialogClickListener)
+                .setNegativeButton("Cancel", dialogClickListener).show();
     }
 
     protected abstract void clickView(View v);
