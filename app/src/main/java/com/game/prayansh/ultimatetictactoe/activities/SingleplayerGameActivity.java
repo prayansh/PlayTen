@@ -186,8 +186,11 @@ public class SinglePlayerGameActivity extends GameActivity {
         CellVal otherPlayer = (player == CellVal.X) ? CellVal.O : CellVal.X;
         for (Map.Entry<Integer, Integer> mapping : mappings) {
             index = mapping.getKey();
-            if (boards[index].solved() && boards[index].winner() == otherPlayer) {
-                continue;
+            if (boards[index].solved()) {
+                if (boards[index].winner() == otherPlayer)
+                    continue;
+                else if (boards[index].winner() == player)
+                    break;
             } else if (boards[index].getBoardScoreForPlayer(player) < boards[index]
                     .getBoardScoreForPlayer(otherPlayer)) {
                 continue;
