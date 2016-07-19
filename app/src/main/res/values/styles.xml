@@ -22,8 +22,13 @@
         <item name="android:padding">@dimen/img_padding</item>
     </style>
 
-    <style name="btn">
-
+    <style name="txt_btn" parent="@style/Widget.AppCompat.Button.Borderless">
+        <item name="android:layout_width">150dip</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">5dip</item>
+        <item name="android:layout_margin">10dip</item>
+        <item name="android:background">@drawable/btn_light</item>
+        <item name="android:textColor">@color/mt_black</item>
     </style>
 
 
