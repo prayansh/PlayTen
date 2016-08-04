@@ -52,17 +52,6 @@ public class ThemeManager {
                 Color.rgb(255, 255, 255),
                 R.drawable.btn_light);
     }
-//
-//    public static void setDC(Context context) {
-//        int white = Color.rgb(255, 255, 255);
-//        theme = new Theme(white,
-//                R.drawable.grad_blue,
-//                R.drawable.cross,
-//                R.drawable.circle,
-//                ContextCompat.getColor(context, R.color.belize_hole),
-//                0,
-//                white);
-//    }
 
     public static void setDC(Context context) {
         int seed = (int) (Math.random() * 10);

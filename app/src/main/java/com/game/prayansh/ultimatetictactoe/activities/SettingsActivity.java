@@ -20,7 +20,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
@@ -47,7 +47,7 @@ public class SettingsActivity extends AppCompatActivity {
     @BindView(R.id.tMarvel)
     Button marvel;
     @BindView(R.id.bg)
-    View bg;
+    ViewGroup bg;
 
     SharedPreferences prefs;
 
